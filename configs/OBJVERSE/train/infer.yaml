@@ -1,0 +1,53 @@
+# Basic 
+type: OBJVERSES
+mode: diffMulti # diffMulti
+stage: deform
+repeat: 1 # enlarge the dataset by repeating the data, 1 -> no repeat
+# pc_size: 256 # surface sampling
+pc_size: 2048
+num_samples: 1024 # vol + near for each
+seed: 0
+
+T_factor: 1
+
+# Deform specific dataset setting
+n_sample_pro_model: 100
+interval_between_frames: 17
+n_selected_frames: 2
+surface_sampling: False
+augment_points: False
+normalize_first_frame: True # True will result in OOM kill
+revert: False
+
+interval_between_sequence: 40
+
+use_temp_pe: False
+use_temporal_rope: True
+use_spatial_pe: True
+
+
+# Input setting
+n_inputs: 512
+inputs_noise_std: 0.001
+use_half: False
+use_depth: False
+overfitting: False
+
+train_all_model: True
+
+length_sequence: 6 # 17
+offset_sequence: 0
+n_training_frames: 6 # 17
+
+time_attn: True
+is_corr: True
+
+
+# Training
+batch_size: 4 # It's max for 24GB GPU
+lr: 0.00005  # 0.00005 # 0.0001
+epochs: 1000 # 50
+warmup_epochs: 0
+accum_iter: 100
+save_every: 5
+eval_every: 5

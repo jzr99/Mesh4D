@@ -1,0 +1,473 @@
+# Open Source Model Licensed under the Apache License Version 2.0
+# and Other Licenses of the Third-Party Components therein:
+# The below Model in this distribution may have been modified by THL A29 Limited
+# ("Tencent Modifications"). All Tencent Modifications are Copyright (C) 2024 THL A29 Limited.
+
+# Copyright (C) 2024 THL A29 Limited, a Tencent company.  All rights reserved.
+# The below software and/or models in this distribution may have been
+# modified by THL A29 Limited ("Tencent Modifications").
+# All Tencent Modifications are Copyright (C) THL A29 Limited.
+
+# Hunyuan 3D is licensed under the TENCENT HUNYUAN NON-COMMERCIAL LICENSE AGREEMENT
+# except for the third-party components listed below.
+# Hunyuan 3D does not impose any additional limitations beyond what is outlined
+# in the repsective licenses of these third-party components.
+# Users must comply with all terms and conditions of original licenses of these third-party
+# components and must ensure that the usage of the third party components adheres to
+# all relevant laws and regulations.
+
+# For avoidance of doubts, Hunyuan 3D means the large language models and
+# their software and algorithms, including trained model weights, parameters (including
+# optimizer states), machine-learning model code, inference-enabling code, training-enabling code,
+# fine-tuning enabling code and other elements of the foregoing made publicly available
+# by Tencent in accordance with TENCENT HUNYUAN COMMUNITY LICENSE AGREEMENT.
+
+
+import os
+from typing import Union, List
+
+import numpy as np
+import torch
+import torch.nn as nn
+import yaml
+
+from .attention_blocks_deform_batt import FourierEmbedder, Transformer, CrossAttentionDecoder, PointCrossAttentionEncoder
+from .surface_extractors import MCSurfaceExtractor, SurfaceExtractors
+from .volume_decoders import VanillaVolumeDecoder, FlashVDMVolumeDecoding, HierarchicalVolumeDecoding
+from ...utils import logger, synchronize_timer, smart_load_model
+from ...utils.misc import instantiate_from_config
+
+from diffusers.models.embeddings import get_1d_rotary_pos_embed
+
+
+class DiagonalGaussianDistribution(object):
+    def __init__(self, parameters: Union[torch.Tensor, List[torch.Tensor]], deterministic=False, feat_dim=1):
+        """
+        Initialize a diagonal Gaussian distribution with mean and log-variance parameters.
+
+        Args:
+            parameters (Union[torch.Tensor, List[torch.Tensor]]): 
+                Either a single tensor containing concatenated mean and log-variance along `feat_dim`,
+                or a list of two tensors [mean, logvar].
+            deterministic (bool, optional): If True, the distribution is deterministic (zero variance). 
+                Default is False. feat_dim (int, optional): Dimension along which mean and logvar are 
+                concatenated if parameters is a single tensor. Default is 1.
+        """
+        self.feat_dim = feat_dim
+        self.parameters = parameters
+
+        if isinstance(parameters, list):
+            self.mean = parameters[0]
+            self.logvar = parameters[1]
+        else:
+            self.mean, self.logvar = torch.chunk(parameters, 2, dim=feat_dim)
+
+        # self.logvar = torch.clamp(self.logvar, -30.0, 20.0)
+        self.logvar = torch.clamp(self.logvar, -10.0, 2.0)
+        self.deterministic = deterministic
+        self.std = torch.exp(0.5 * self.logvar)
+        self.var = torch.exp(self.logvar)
+        if self.deterministic:
+            self.var = self.std = torch.zeros_like(self.mean)
+
+    def sample(self):
+        """
+        Sample from the diagonal Gaussian distribution.
+
+        Returns:
+            torch.Tensor: A sample tensor with the same shape as the mean.
+        """
+        x = self.mean + self.std * torch.randn_like(self.mean)
+        return x
+
+    def kl(self, other=None, dims=(1, 2, 3)):
+        """
+        Compute the Kullback-Leibler (KL) divergence between this distribution and another.
+
+        If `other` is None, compute KL divergence to a standard normal distribution N(0, I).
+
+        Args:
+            other (DiagonalGaussianDistribution, optional): Another diagonal Gaussian distribution.
+            dims (tuple, optional): Dimensions along which to compute the mean KL divergence. 
+                Default is (1, 2, 3).
+
+        Returns:
+            torch.Tensor: The mean KL divergence value.
+        """
+        if self.deterministic:
+            return torch.Tensor([0.])
+        else:
+            if other is None:
+                return 0.5 * torch.mean(torch.pow(self.mean, 2)
+                                        + self.var - 1.0 - self.logvar,
+                                        dim=dims)
+            else:
+                return 0.5 * torch.mean(
+                    torch.pow(self.mean - other.mean, 2) / other.var
+                    + self.var / other.var - 1.0 - self.logvar + other.logvar,
+                    dim=dims)
+
+    def nll(self, sample, dims=(1, 2, 3)):
+        if self.deterministic:
+            return torch.Tensor([0.])
+        logtwopi = np.log(2.0 * np.pi)
+        return 0.5 * torch.sum(
+            logtwopi + self.logvar + torch.pow(sample - self.mean, 2) / self.var,
+            dim=dims)
+
+    def mode(self):
+        return self.mean
+
+
+class VectsetVAE(nn.Module):
+
+    @classmethod
+    @synchronize_timer('VectsetVAE Model Loading')
+    def from_single_file(
+        cls,
+        ckpt_path,
+        config_path,
+        device='cuda',
+        dtype=torch.float16,
+        use_safetensors=None,
+        **kwargs,
+    ):
+        # load config
+        with open(config_path, 'r') as f:
+            config = yaml.safe_load(f)
+
+        # load ckpt
+        if use_safetensors:
+            ckpt_path = ckpt_path.replace('.ckpt', '.safetensors')
+        if not os.path.exists(ckpt_path):
+            raise FileNotFoundError(f"Model file {ckpt_path} not found")
+
+        logger.info(f"Loading model from {ckpt_path}")
+        if use_safetensors:
+            import safetensors.torch
+            ckpt = safetensors.torch.load_file(ckpt_path, device='cpu')
+        else:
+            ckpt = torch.load(ckpt_path, map_location='cpu', weights_only=True)
+
+        model_kwargs = config['params']
+        model_kwargs.update(kwargs)
+
+        model = cls(**model_kwargs)
+        model.load_state_dict(ckpt)
+        # TODO here we need to make some changes
+        model.to(device=device, dtype=dtype)
+        return model
+
+    @classmethod
+    def from_pretrained(
+        cls,
+        model_path,
+        device='cuda',
+        dtype=torch.float16,
+        use_safetensors=False,
+        variant='fp16',
+        subfolder='hunyuan3d-vae-v2-1',
+        **kwargs,
+    ):
+        config_path, ckpt_path = smart_load_model(
+            model_path,
+            subfolder=subfolder,
+            use_safetensors=use_safetensors,
+            variant=variant
+        )
+
+        return cls.from_single_file(
+            ckpt_path,
+            config_path,
+            device=device,
+            dtype=dtype,
+            use_safetensors=use_safetensors,
+            **kwargs
+        )
+        
+    def init_from_ckpt(self, path, ignore_keys=(), device='cuda', dtype=torch.float16):
+        state_dict = torch.load(path, map_location="cpu")
+        state_dict = state_dict.get("state_dict", state_dict)
+        keys = list(state_dict.keys())
+        # create a new state_dict
+        new_state_dict = {}
+        for k in keys:
+            for ik in ignore_keys:
+                if k.startswith(ik):
+                    print("Deleting key {} from state_dict.".format(k))
+                    del state_dict[k]
+        keys = list(state_dict.keys())
+        for k in keys:
+            if k.startswith("model."):
+                new_state_dict[k[len("model."):]] = state_dict[k]
+            else:
+                new_state_dict[k] = state_dict[k]
+        try:
+            missing, unexpected = self.load_state_dict(new_state_dict, strict=False)
+            # import pdb;pdb.set_trace()
+        except Exception as e:
+            print(f"error loading state_dict: {e}")
+            print(f"ignore this error if not resume training")
+            print(f"quick fixing")
+            new_state_dict['encoder.input_proj.weight'] = new_state_dict['encoder.input_proj.weight'].repeat(1, 2) / 2
+            new_state_dict['geo_decoder.output_proj.weight'] = new_state_dict['geo_decoder.output_proj.weight'].repeat(3, 1)
+            new_state_dict['geo_decoder.output_proj.bias'] = new_state_dict['geo_decoder.output_proj.bias'].repeat(3)
+            missing, unexpected = self.load_state_dict(new_state_dict, strict=False)
+
+
+        print(f"Restored from {path} with {len(missing)} missing and {len(unexpected)} unexpected keys")
+        if len(missing) > 0:
+            print(f"Missing Keys: {missing}")
+            print(f"Unexpected Keys: {unexpected}")
+        self.to(device=device, dtype=dtype)
+
+    def __init__(
+        self,
+        volume_decoder=None,
+        surface_extractor=None
+    ):
+        super().__init__()
+        if volume_decoder is None:
+            volume_decoder = VanillaVolumeDecoder()
+        if surface_extractor is None:
+            surface_extractor = MCSurfaceExtractor()
+        self.volume_decoder = volume_decoder
+        self.surface_extractor = surface_extractor
+
+    # def latents2mesh(self, latents: torch.FloatTensor, **kwargs):
+    #     with synchronize_timer('Volume decoding'):
+    #         grid_logits = self.volume_decoder(latents, self.geo_decoder, **kwargs)
+    #     with synchronize_timer('Surface extraction'):
+    #         outputs = self.surface_extractor(grid_logits, **kwargs)
+    #     return outputs
+
+    # def enable_flashvdm_decoder(
+    #     self,
+    #     enabled: bool = True,
+    #     adaptive_kv_selection=True,
+    #     topk_mode='mean',
+    #     mc_algo='dmc',
+    # ):
+    #     if enabled:
+    #         if adaptive_kv_selection:
+    #             self.volume_decoder = FlashVDMVolumeDecoding(topk_mode)
+    #         else:
+    #             self.volume_decoder = HierarchicalVolumeDecoding()
+    #         if mc_algo not in SurfaceExtractors.keys():
+    #             raise ValueError(f'Unsupported mc_algo {mc_algo}, available:{list(SurfaceExtractors.keys())}')
+    #         self.surface_extractor = SurfaceExtractors[mc_algo]()
+    #     else:
+    #         self.volume_decoder = VanillaVolumeDecoder()
+    #         self.surface_extractor = MCSurfaceExtractor()
+
+
+class DeformVAEHY(VectsetVAE):
+    def __init__(
+        self,
+        *,
+        num_latents: int,
+        embed_dim: int,
+        width: int,
+        heads: int,
+        num_decoder_layers: int,
+        num_encoder_layers: int = 8,
+        pc_size: int = 5120,
+        pc_sharpedge_size: int = 5120,
+        point_feats: int = 3,
+        downsample_ratio: int = 20,
+        geo_decoder_downsample_ratio: int = 1,
+        geo_decoder_mlp_expand_ratio: int = 4,
+        geo_decoder_ln_post: bool = True,
+        num_freqs: int = 8,
+        include_pi: bool = True,
+        qkv_bias: bool = True,
+        qk_norm: bool = False,
+        label_type: str = "binary",
+        drop_path_rate: float = 0.0,
+        scale_factor: float = 1.0,
+        use_ln_post: bool = True,
+        ckpt_path = None,
+        num_frames: int = 6,
+        num_tokens: int = 320,
+        num_pc_tokens: int = 256,
+        use_bone: bool = True,
+        use_temporal_attention: bool = True,
+        use_global_attention: bool = True,
+
+        **kwargs
+    ):
+        super().__init__()
+        self.geo_decoder_ln_post = geo_decoder_ln_post
+        self.downsample_ratio = downsample_ratio
+
+        self.fourier_embedder = FourierEmbedder(num_freqs=num_freqs, include_pi=include_pi)
+
+        self.encoder = PointCrossAttentionEncoder(
+            fourier_embedder=self.fourier_embedder,
+            num_latents=num_latents,
+            downsample_ratio=self.downsample_ratio,
+            pc_size=pc_size,
+            pc_sharpedge_size=pc_sharpedge_size,
+            point_feats=point_feats,
+            width=width,
+            heads=heads,
+            layers=num_encoder_layers,
+            qkv_bias=qkv_bias,
+            use_ln_post=use_ln_post,
+            qk_norm=qk_norm,
+            use_bone=use_bone,
+            use_temporal_attention=use_temporal_attention,
+            use_global_attention=use_global_attention,
+        )
+
+        self.pre_kl = nn.Linear(width, embed_dim * 2)
+        self.post_kl = nn.Linear(embed_dim, width)
+
+        self.transformer = Transformer(
+            n_ctx=num_latents,
+            width=width,
+            layers=num_decoder_layers,
+            heads=heads,
+            qkv_bias=qkv_bias,
+            qk_norm=qk_norm,
+            drop_path_rate=drop_path_rate,
+            use_temporal_attention=use_temporal_attention,
+            use_global_attention=use_global_attention
+        )
+
+        self.geo_decoder = CrossAttentionDecoder(
+            fourier_embedder=self.fourier_embedder,
+            out_channels=3, # 1 from pretrained model
+            num_latents=num_latents,
+            mlp_expand_ratio=geo_decoder_mlp_expand_ratio,
+            downsample_ratio=geo_decoder_downsample_ratio,
+            enable_ln_post=self.geo_decoder_ln_post,
+            width=width // geo_decoder_downsample_ratio,
+            heads=heads // geo_decoder_downsample_ratio,
+            qkv_bias=qkv_bias,
+            qk_norm=qk_norm,
+            label_type=label_type,
+        )
+
+        self.scale_factor = scale_factor
+        self.latent_shape = (num_latents, embed_dim)
+
+        T = num_frames
+        # N = num_tokens
+        N = num_pc_tokens
+        C = width
+
+        self.num_pc_tokens = num_pc_tokens
+        self.num_tokens = num_tokens
+
+
+        T_grid = torch.arange(T).reshape(T, 1)
+        T_grid = T_grid.repeat(1, N) # [T, N]
+        T_grid = T_grid.numpy()
+        self.global_rotary_emb = get_1d_rotary_pos_embed(int(C/heads), T_grid.reshape(-1), use_real=True)
+
+        self.rotary_emb = get_1d_rotary_pos_embed(int(C/heads), np.arange(T, dtype=np.float32), use_real=True) # here 8 is num_attention_heads
+
+
+        # self.rotary_emb=None
+        # self.global_rotary_emb=None
+
+        if ckpt_path is not None:
+            self.init_from_ckpt(ckpt_path)
+
+
+    # def forward(self, latents):
+    #     latents = self.post_kl(latents)
+    #     latents = self.transformer(latents)
+    #     return latents
+
+    def forward(self, pc_src_all: torch.Tensor, pc_tgt_all: torch.Tensor, pc_query_all: torch.Tensor, bone_positions_sequence: torch.Tensor, weights: torch.Tensor, *args, **kwargs):
+        latents, canonical_points, kl_loss = self.encode(pc_src_all, pc_tgt_all, bone_positions_sequence=bone_positions_sequence, weights=weights, *args, **kwargs)
+        if len(pc_query_all.shape) == 4:
+            pc_query = pc_query_all[:,0,:,:]
+        else:
+            pc_query = pc_query_all
+        deformed_verts = self.decode(latents, pc_query, *args, **kwargs)['deformed']
+        return {'deformed': deformed_verts, 'kl': kl_loss, 'canonical_points': canonical_points}
+
+    # def compute_loss(self, latents, canonical_points):
+
+    def decode_shape(self, latents, query_points):
+        num_chunks = 10000
+        assert len(query_points.shape) == 3
+        assert len(latents.shape) == 4
+        B, T, N, C = latents.shape
+        latents = latents.reshape(B*T, N, C)
+        query_points = query_points.reshape(B, 1, -1, 3)
+        query_points = query_points.repeat(1, T, 1, 1)
+        query_points = query_points.reshape(B*T, -1, 3)
+        # 2. latents to 3d volume
+        batch_logits = []
+        for start in range(0, query_points.shape[1], num_chunks):
+            chunk_queries = query_points[:, start: start + num_chunks, :]
+            logits = self.geo_decoder(queries=chunk_queries, latents=latents)
+            batch_logits.append(logits)
+
+        grid_logits = torch.cat(batch_logits, dim=1)
+        grid_logits = grid_logits.reshape(B, T, -1, 3)
+        grid_logits = grid_logits + query_points.reshape(B, T, -1, 3)
+        return grid_logits
+
+    def encode(self, pc_src_all: torch.Tensor, pc_tgt_all: torch.Tensor, sample_posterior=True, bone_positions_sequence=None, weights=None, inference_mode=False):
+        # pc_query = pc_query_all[:,0,:,:]
+        B, T, N, C = pc_tgt_all.shape
+        pc_src = pc_src_all[:,[0],:,:]
+        bone_positions_sequence_src = bone_positions_sequence[:,[0],:,:]
+        bone_positions_sequence_tgt = bone_positions_sequence[:,1:,:,:]
+        bone_positions_sequence_src = bone_positions_sequence_src.repeat(1, T, 1, 1)
+        bone_positions_sequence_all = torch.cat([bone_positions_sequence_src, bone_positions_sequence_tgt], dim=3)
+        assert self.num_tokens == self.num_pc_tokens + bone_positions_sequence_all.shape[-2]
+        
+
+        pc_src_repeat = pc_src.repeat(1, T, 1, 1) # B, T, N, C
+        pc_tgt_all = torch.cat([pc_src_repeat, pc_tgt_all], dim=3) # B, T, N, 2C
+        pc_tgt_all_reshape = pc_tgt_all.reshape(B, T, N, 2*C) # pc_tgt_all.reshape(B * T, N, 2*C)
+
+        latents, canonical_points = self.encoder(pc_tgt_all_reshape, num_tokens = self.num_pc_tokens, seed = None, bone_positions_sequence_all=bone_positions_sequence_all, global_rotary_emb=self.global_rotary_emb, rotary_emb=self.rotary_emb, attn_mask=weights)
+        # print(latents.shape, self.pre_kl.weight.shape)
+        moments = self.pre_kl(latents)
+        posterior = DiagonalGaussianDistribution(moments, feat_dim=-1)
+        kl_loss = posterior.kl()
+        if sample_posterior:
+            latents = posterior.sample()
+        else:
+            latents = posterior.mode()
+        
+        if inference_mode:
+            return latents, posterior, canonical_points
+        
+        return latents, canonical_points, kl_loss
+
+    def decode(self, latents, verts, *args, **kwargs):
+        latents = self.post_kl(latents)
+        latents = self.transformer(latents, global_rotary_emb=self.global_rotary_emb, rotary_emb=self.rotary_emb)
+        if len(verts.shape) == 4:
+            verts = verts[:,0,:,:]
+        grid_logits = self.decode_shape(latents, verts)
+        return {'deformed': grid_logits}
+
+
+class DeformVAE(nn.Module):
+    def __init__(self, model_str, model_ckpt, device='cuda', dtype=torch.float16, *args, **kwargs):
+        super().__init__()
+        # import pdb;pdb.set_trace()
+        # check model_str.target and model_str.params
+        self.model = instantiate_from_config(model_str)
+        self.model.load_state_dict(torch.load(model_ckpt, map_location="cpu")["model"])
+        self.model.to(device=device, dtype=dtype)
+        
+    def forward(self, surface_src, surface_tgt, *args, **kwargs):
+        return self.model.compress_encode(surface_src, surface_tgt, *args, **kwargs)
+    
+    def encode(self, surface_src, surface_tgt, *args, **kwargs):
+        # x, x_dist, canonical_points
+        return self.model.compress_encode(surface_src, surface_tgt, *args, **kwargs)
+    
+    def decode(self, deform_latent_space, verts, *args, **kwargs):
+        # deformed_verts = deform_ae.compress_decode(deform_latent_space, torch.tensor(verts).unsqueeze(0).repeat(T,1,1).unsqueeze(0).float().to(device))['deformed'].squeeze(0)
+        return self.model.compress_decode(deform_latent_space, verts, *args, **kwargs)

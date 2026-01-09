@@ -1,0 +1,90 @@
+
+## ___***Mesh4D: 4D Mesh Reconstruction and Tracking from Monocular Video***___
+<p align="center">
+  <img src="assets/mesh4d_logo_2.png" style="height:80px">
+</p>
+
+## [Paper](https://arxiv.org/pdf/2601.05251) | [Video Youtube](https://youtu.be/Qqo6QQjXuB0) | [Project Page](https://mesh-4d.github.io/) 
+
+<p align="center">
+<img src="assets/mesh4d_github_teaser.png" width="400" height="196"/> 
+</p>
+
+## 🔥 News
+
+- Jan 9, 2026: 🤗 We release the first version of Mesh4D!
+
+
+## ⚙️ Setup
+
+### Install Environment via Anaconda (Recommended)
+```bash
+conda create -n mesh4d python=3.10.18
+conda activate mesh4d
+```
+
+We test our model with Python 3.10 and PyTorch 2.5.1+cu124.
+```bash
+pip install torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu124
+pip install -r requirements.txt
+
+cd hy3dpaint/custom_rasterizer
+pip install -e .
+cd ../..
+cd hy3dpaint/DifferentiableRenderer
+bash compile_mesh_painter.sh
+cd ../..
+
+wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth -P hy3dpaint/ckpt
+```
+
+Download model checkpoint
+```bash
+mkdir ckpt
+gdown 1e9YGQAuFr5BDN2--srDEMnoULb4ZP5sx -O ./ckpt/ # deformation vae
+gdown 1jeNwiP9-B1uyKvk3_yBN7Y9-D7YQxBc5 -O ./ckpt/ # denoiser
+```
+
+## 😈 Inference
+We provide some preprocessed in-the-wild image sequences from Consistent4D dataset `./DATA/` for inference:
+```bash 
+cd hy3dshape
+python infer.py
+```
+For other in-the-wild videos, you need to first segment foreground object out and save it as a sequence of RGBA images with white background.
+
+## 😸 Evaluation
+The benchmark and evaluation code will come soon.
+
+## 🌠 Visualization
+Visualization code will come soon.
+
+
+## Acknowledgements
+
+We have used codes from other great research work, including [Hunyuan3D-2.1](https://github.com/Tencent-Hunyuan/Hunyuan3D-2.1), [TripoSG](https://github.com/VAST-AI-Research/TripoSG/tree/main), [Motion2VecSets](https://github.com/VVeiCao/Motion2VecSets), [Consistent4D](https://github.com/yanqinJiang/Consistent4D), and [Diffusion4D](https://github.com/VITA-Group/Diffusion4D). We sincerely thank the authors for their awesome work!
+
+## 🔗 BibTeX
+
+If you find Mesh4D useful for your research and applications, please cite us using this BibTex:
+```bibtex
+@misc{jiang2026mesh4d,
+      title={Mesh4D: 4D Mesh Reconstruction and Tracking from Monocular Video}, 
+      author={Zeren Jiang and Chuanxia Zheng and Iro Laina and Diane Larlus and Andrea Vedaldi},
+      year={2026},
+      eprint={2601.05251},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2601.05251}, 
+}
+```
+
+<!-- ## Star History
+
+<a href="https://star-history.com/#Tencent-Hunyuan/Hunyuan3D-2.1&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Tencent-Hunyuan/Hunyuan3D-2.1&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=Tencent-Hunyuan/Hunyuan3D-2.1&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=Tencent-Hunyuan/Hunyuan3D-2.1&type=Date" />
+ </picture>
+</a> -->
