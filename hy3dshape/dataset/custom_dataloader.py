@@ -7,7 +7,6 @@ import glob
 import re
 import trimesh
 import imageio
-from core.deform.diffMulti.image_process import prepare_image, prepare_image_simple
 from im2mesh.utils.libmesh import check_mesh_contains
 from transformers import BitImageProcessor
 from munch import Munch

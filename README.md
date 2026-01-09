@@ -36,6 +36,10 @@ bash compile_mesh_painter.sh
 cd ../..
 
 wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth -P hy3dpaint/ckpt
+
+cd hy3dshape
+python ./setup_im2mesh.py build_ext --inplace
+cd ..
 ```
 
 Download model checkpoint
