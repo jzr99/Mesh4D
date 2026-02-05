@@ -15,7 +15,7 @@ numpy_include_dir = numpy.get_include()
 pykdtree = Extension(
     'im2mesh.utils.libkdtree.pykdtree.kdtree',
     sources=[
-        'im2mesh/utils/libkdtree/pykdtree/kdtree.c',
+        'im2mesh/utils/libkdtree/pykdtree/kdtree.pyx',
         'im2mesh/utils/libkdtree/pykdtree/_kdtree_core.c'
     ],
     language='c',
