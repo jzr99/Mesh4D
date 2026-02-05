@@ -222,12 +222,12 @@ if __name__ == "__main__":
 
     if getattr(config, "init_unet_from", None):
         unet_ckpt_path = config.init_unet_from
-        sd = torch.load(unet_ckpt_path, map_location="cpu")
+        sd = torch.load(unet_ckpt_path, map_location="cpu", weights_only=False)
         model_unet.load_state_dict(sd, strict=True)
 
     if getattr(config, "init_vae_from", None):
         vae_ckpt_path = config.init_vae_from
-        sd_vae = torch.load(vae_ckpt_path, map_location="cpu")
+        sd_vae = torch.load(vae_ckpt_path, map_location="cpu", weights_only=False)
 
         def replace_key(key_str):
             replace_pairs = [("key", "to_k"), ("query", "to_q"), ("value", "to_v"), ("proj_attn", "to_out.0")]
@@ -241,7 +241,7 @@ if __name__ == "__main__":
     if hasattr(model.unet, "controlnet"):
         if getattr(config, "init_control_from", None):
             unet_ckpt_path = config.init_control_from
-            sd_control = torch.load(unet_ckpt_path, map_location="cpu")
+            sd_control = torch.load(unet_ckpt_path, map_location="cpu", weights_only=False)
             model.unet.controlnet.load(sd_control, strict=True)
 
     noise_in_channels = config.model.params.get("noise_in_channels", None)
@@ -287,7 +287,7 @@ if __name__ == "__main__":
 
     if getattr(config, "resume_from", None):
         cnet_ckpt_path = config.resume_from
-        sds = torch.load(cnet_ckpt_path, map_location="cpu")["state_dict"]
+        sds = torch.load(cnet_ckpt_path, map_location="cpu", weights_only=False)["state_dict"]
         sd0 = {k[len(model_unet_prefix) :]: v for k, v in sds.items() if model_unet_prefix in k}
         # model.unet.unet.unet.load_state_dict(sd0, strict=True)
         model_unet.load_state_dict(sd0, strict=True)

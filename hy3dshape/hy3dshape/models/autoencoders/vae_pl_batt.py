@@ -78,7 +78,7 @@ class VAEPL(pl.LightningModule):
                     print(f"{context}: Restored training weights")
 
     def init_from_ckpt(self, path, ignore_keys=()):
-        ckpt = torch.load(path, map_location="cpu")
+        ckpt = torch.load(path, map_location="cpu", weights_only=False)
         if 'state_dict' not in ckpt:
             # deepspeed ckpt
             state_dict = {}

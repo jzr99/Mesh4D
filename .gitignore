@@ -170,7 +170,8 @@ gradio_cache/
 
 
 
-
+ckpt/
+hy3dshape/im2mesh/utils/
 hy3dshape/tools/cmd*.sh
 hy3dshape/output_folder/
 demo.glb
@@ -183,4 +184,3 @@ demo_untextured.glb
 white_mesh_remesh.obj
 hy3dpaint/ckpt/
 *.glb
-

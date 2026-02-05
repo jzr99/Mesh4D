@@ -182,7 +182,7 @@ class VectsetVAE(nn.Module):
         )
         
     def init_from_ckpt(self, path, ignore_keys=()):
-        state_dict = torch.load(path, map_location="cpu")
+        state_dict = torch.load(path, map_location="cpu", weights_only=False)
         state_dict = state_dict.get("state_dict", state_dict)
         keys = list(state_dict.keys())
         for k in keys:
@@ -351,7 +351,7 @@ class DeformVAE(nn.Module):
         # import pdb;pdb.set_trace()
         # check model_str.target and model_str.params
         self.model = instantiate_from_config(model_str)
-        self.model.load_state_dict(torch.load(model_ckpt, map_location="cpu")["model"])
+        self.model.load_state_dict(torch.load(model_ckpt, map_location="cpu", weights_only=False)["model"])
         self.model.to(device=device, dtype=dtype)
         
     def forward(self, surface_src, surface_tgt, *args, **kwargs):

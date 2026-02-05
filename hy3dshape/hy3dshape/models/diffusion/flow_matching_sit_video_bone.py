@@ -98,7 +98,7 @@ class Diffuser(pl.LightningModule):
         self.cond_stage_model_2 = instantiate_non_trainable_model(cond_stage_config_2)
         
         # if cond_stage_ckpt_2 is not None:
-        #     self.cond_stage_model_2.load_state_dict(torch.load(cond_stage_ckpt_2, map_location="cpu")["state_dict"])
+        #     self.cond_stage_model_2.load_state_dict(torch.load(cond_stage_ckpt_2, map_location="cpu", weights_only=False)["state_dict"])
 
         self.scale_by_std = scale_by_std
         if scale_by_std:
@@ -151,7 +151,7 @@ class Diffuser(pl.LightningModule):
                     print(f"{context}: Restored training weights")
 
     def init_from_ckpt(self, path, ignore_keys=()):
-        ckpt = torch.load(path, map_location="cpu")
+        ckpt = torch.load(path, map_location="cpu", weights_only=False)
         if 'state_dict' not in ckpt:
             # deepspeed ckpt
             state_dict = {}

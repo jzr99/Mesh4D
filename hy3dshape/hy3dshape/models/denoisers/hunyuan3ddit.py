@@ -358,7 +358,7 @@ class Hunyuan3DDiT(nn.Module):
         if ckpt_path is not None:
             print('restored denoiser ckpt', ckpt_path)
 
-            ckpt = torch.load(ckpt_path, map_location="cpu")
+            ckpt = torch.load(ckpt_path, map_location="cpu", weights_only=False)
             if 'state_dict' not in ckpt:
                 # deepspeed ckpt
                 state_dict = {}

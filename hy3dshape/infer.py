@@ -14,7 +14,7 @@
 import sys
 sys.path.insert(0, '../hy3dpaint')
 
-
+import bpy # important to import bpy before other packages
 from PIL import Image
 import numpy as np
 import pandas as pd
@@ -103,7 +103,7 @@ ckpt_cfg_path = './configs/infer.yaml'
 ckpt_path = '../ckpt/denoiser.ckpt'
 config = yaml.safe_load(open(ckpt_cfg_path, 'r'))
 model = instantiate_from_config(config['model']['params']['denoiser_cfg'])
-sd = torch.load(ckpt_path)
+sd = torch.load(ckpt_path, weights_only=False)
 sd = sd['state_dict']
 sd = {k.replace('model.', ''):v for k,v in sd.items()}
 msg = model.load_state_dict(sd, strict=False)
