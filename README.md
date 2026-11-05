@@ -13,6 +13,7 @@
 ## 🔥 News
 
 - Jan 9, 2026: 🤗 We release the first version of Mesh4D!
+- Nov 5, 2026: 🤗 We release the MeshBench Bechmark and visualization code!
 
 
 ## ⚙️ Setup
