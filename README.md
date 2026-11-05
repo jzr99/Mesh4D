@@ -83,7 +83,21 @@ in the guide. Archive publication to Drive has not yet been verified; local
 archives can already be verified and extracted with the command above.
 
 ## 🌠 Visualization
-Visualization code will come soon.
+Render animated Mesh4D GLBs as four-view PNG sequences with Blender 4.0, then
+assemble a GIF or MP4 preview:
+
+```bash
+blender --background --python-exit-code 1 --python visualization/render.py -- \
+  --input /path/to/combined_gen_mtl.glb \
+  --output-dir visualization/results/example
+python visualization/preview.py \
+  --input-dir visualization/results/example \
+  --output visualization/results/example.gif --fps 24
+```
+
+CPU rendering is the default; use `--device CUDA` or `--device OPTIX` for GPU
+rendering. See [the visualization guide](visualization/README.md) for frame
+selection, turntables, clay shading, benchmark cameras, and MP4 output.
 
 
 ## Acknowledgements

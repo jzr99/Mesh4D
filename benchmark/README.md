@@ -94,6 +94,12 @@ benchmark's front, right, back, and left cameras and matching frame timing,
 normalization, and alignment. Camera JSON files accompany the reference images.
 The evaluator does not render GLBs or align geometry for you.
 
+The separate [visualization renderer](../visualization/README.md#use-benchmark-cameras)
+can render animated Mesh4D GLBs using these camera JSON files and the filename
+layout below. It uses fixed studio lighting; the original randomized benchmark
+lighting is not stored in the camera files. Keep that difference in mind when
+comparing RGB metrics, and use the released PNGs as ground truth.
+
 The default prediction layout matches the original research evaluator:
 
 ```text

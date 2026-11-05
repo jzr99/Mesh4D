@@ -190,3 +190,6 @@ hy3dpaint/ckpt/
 /benchmark/results/
 /benchmark/weights/
 
+# Generated render sequences and previews
+/visualization/results/
+
