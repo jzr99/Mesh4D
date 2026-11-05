@@ -58,7 +58,29 @@ python infer.py
 For other in-the-wild videos, you need to first segment foreground object out and save it as a sequence of RGBA images with white background.
 
 ## 😸 Evaluation
-The benchmark and evaluation code will come soon.
+See [the benchmark guide](benchmark/README.md) for the
+[benchmark download folder](https://drive.google.com/drive/folders/12kzy9YTctkNNIWELhXboiaM0vNhK9nFn),
+checksum-verified extraction, clip definitions, and rendered-image evaluation.
+The benchmark contains 40 animated GLBs and 50 evaluation clips from 39 objects;
+the six-frame and sixteen-frame protocols use 50 and 48 clips, respectively.
+
+After obtaining the benchmark archives and rendering your predictions, run from
+the repository root:
+
+```bash
+python -m pip install -r benchmark/requirements.txt
+python benchmark/download.py --archive-dir /path/to/archives --skip-download
+python benchmark/evaluate.py \
+  --benchmark-root data/mesh4d_benchmark \
+  --pred-root /path/to/prediction_renders \
+  --frames 6 --output-dir benchmark/results/mesh4d_6
+```
+
+The evaluator reports PSNR, SSIM, LPIPS, and CLIP image similarity. It checks all
+required frames before scoring and supports the original Mesh4D render layout.
+Optional historical I3D scoring and alternate filename layouts are documented
+in the guide. Archive publication to Drive has not yet been verified; local
+archives can already be verified and extracted with the command above.
 
 ## 🌠 Visualization
 Visualization code will come soon.

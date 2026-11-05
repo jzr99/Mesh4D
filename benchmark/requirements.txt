@@ -1,0 +1,7 @@
+# Install in the Mesh4D environment after the project's PyTorch/torchvision setup.
+numpy>=1.24
+Pillow>=9.1
+scipy>=1.9
+torchmetrics==1.6.0
+transformers==4.46.0
+gdown>=5.2.1

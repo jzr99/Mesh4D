@@ -1,0 +1,905 @@
+{
+  "benchmark": "Mesh4D local benchmark",
+  "snapshot_date": "2026-11-04",
+  "views": [
+    "front",
+    "right",
+    "back",
+    "left"
+  ],
+  "objects": [
+    {
+      "object_path": "000-000/01f1cc659cb847a4a7366b84844641c2",
+      "object_id": "01f1cc659cb847a4a7366b84844641c2",
+      "glb": "glbs/000-000/01f1cc659cb847a4a7366b84844641c2.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-005/14f39408ecd943009cfcb273e5e7f691",
+      "object_id": "14f39408ecd943009cfcb273e5e7f691",
+      "glb": "glbs/000-005/14f39408ecd943009cfcb273e5e7f691.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-009/1646ade065cc4674891c596dd48e1b39",
+      "object_id": "1646ade065cc4674891c596dd48e1b39",
+      "glb": "glbs/000-009/1646ade065cc4674891c596dd48e1b39.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-025/1923aeaecf0b45e6ae808c72fb7c93a4",
+      "object_id": "1923aeaecf0b45e6ae808c72fb7c93a4",
+      "glb": "glbs/000-025/1923aeaecf0b45e6ae808c72fb7c93a4.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-032/e2e73395e95443439d8e2d5fcd213c03",
+      "object_id": "e2e73395e95443439d8e2d5fcd213c03",
+      "glb": "glbs/000-032/e2e73395e95443439d8e2d5fcd213c03.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-034/1f83b971e0974b84a2f0f41a191408ed",
+      "object_id": "1f83b971e0974b84a2f0f41a191408ed",
+      "glb": "glbs/000-034/1f83b971e0974b84a2f0f41a191408ed.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-034/654a1d116efb40dc8b59ad635961287c",
+      "object_id": "654a1d116efb40dc8b59ad635961287c",
+      "glb": "glbs/000-034/654a1d116efb40dc8b59ad635961287c.glb",
+      "geometry_frame_count": 80,
+      "input_image_count": 81,
+      "six_frame_clips": 2,
+      "sixteen_frame_clips": 2
+    },
+    {
+      "object_path": "000-040/0e7087f99cab442dbc8324e0b03cdb5b",
+      "object_id": "0e7087f99cab442dbc8324e0b03cdb5b",
+      "glb": "glbs/000-040/0e7087f99cab442dbc8324e0b03cdb5b.glb",
+      "geometry_frame_count": 19,
+      "input_image_count": 19,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-044/131f67f813b44eadb5ddca9ae319e03a",
+      "object_id": "131f67f813b44eadb5ddca9ae319e03a",
+      "glb": "glbs/000-044/131f67f813b44eadb5ddca9ae319e03a.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-044/1cd9982b23cf4756bd4871cf0bee2e4c",
+      "object_id": "1cd9982b23cf4756bd4871cf0bee2e4c",
+      "glb": "glbs/000-044/1cd9982b23cf4756bd4871cf0bee2e4c.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-045/eea11a04e3134378aec27d211d9b31be",
+      "object_id": "eea11a04e3134378aec27d211d9b31be",
+      "glb": "glbs/000-045/eea11a04e3134378aec27d211d9b31be.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-052/0987a1b679434d48bc90e71d94ca547e",
+      "object_id": "0987a1b679434d48bc90e71d94ca547e",
+      "glb": "glbs/000-052/0987a1b679434d48bc90e71d94ca547e.glb",
+      "geometry_frame_count": 14,
+      "input_image_count": 14,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 0
+    },
+    {
+      "object_path": "000-054/2f483cbd01ab4d6aa9ca0b61588f38fd",
+      "object_id": "2f483cbd01ab4d6aa9ca0b61588f38fd",
+      "glb": "glbs/000-054/2f483cbd01ab4d6aa9ca0b61588f38fd.glb",
+      "geometry_frame_count": 16,
+      "input_image_count": 16,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-059/4e5e94ff32dc4b47a7122eb095b58636",
+      "object_id": "4e5e94ff32dc4b47a7122eb095b58636",
+      "glb": "glbs/000-059/4e5e94ff32dc4b47a7122eb095b58636.glb",
+      "geometry_frame_count": 1,
+      "input_image_count": 1,
+      "six_frame_clips": 0,
+      "sixteen_frame_clips": 0
+    },
+    {
+      "object_path": "000-064/8e470ef8e7634819a4f095b6cb3abb2a",
+      "object_id": "8e470ef8e7634819a4f095b6cb3abb2a",
+      "glb": "glbs/000-064/8e470ef8e7634819a4f095b6cb3abb2a.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-069/9118b48cd7af42708db79a149ffe7bf0",
+      "object_id": "9118b48cd7af42708db79a149ffe7bf0",
+      "glb": "glbs/000-069/9118b48cd7af42708db79a149ffe7bf0.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-074/4bc632be07404bffb1ef32a0b007346e",
+      "object_id": "4bc632be07404bffb1ef32a0b007346e",
+      "glb": "glbs/000-074/4bc632be07404bffb1ef32a0b007346e.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-077/1fb8279eebb245cc90c2cd96fb7deabd",
+      "object_id": "1fb8279eebb245cc90c2cd96fb7deabd",
+      "glb": "glbs/000-077/1fb8279eebb245cc90c2cd96fb7deabd.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-084/0551f2a45aa7422c89620af07c816f0f",
+      "object_id": "0551f2a45aa7422c89620af07c816f0f",
+      "glb": "glbs/000-084/0551f2a45aa7422c89620af07c816f0f.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-084/df1cd9aa7e9d4c8d83de1702d179d5ba",
+      "object_id": "df1cd9aa7e9d4c8d83de1702d179d5ba",
+      "glb": "glbs/000-084/df1cd9aa7e9d4c8d83de1702d179d5ba.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-085/a8704e56fa154d608169f492a1931652",
+      "object_id": "a8704e56fa154d608169f492a1931652",
+      "glb": "glbs/000-085/a8704e56fa154d608169f492a1931652.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-087/be8c1eab5bc74cf394ae99f29abf5199",
+      "object_id": "be8c1eab5bc74cf394ae99f29abf5199",
+      "glb": "glbs/000-087/be8c1eab5bc74cf394ae99f29abf5199.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-087/d24f4993807b47cab0cef42d44198f31",
+      "object_id": "d24f4993807b47cab0cef42d44198f31",
+      "glb": "glbs/000-087/d24f4993807b47cab0cef42d44198f31.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-091/7503367b467c450c8ecb2789bef3eb1e",
+      "object_id": "7503367b467c450c8ecb2789bef3eb1e",
+      "glb": "glbs/000-091/7503367b467c450c8ecb2789bef3eb1e.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-102/4aed2cda94274ca7af951839aa8d751c",
+      "object_id": "4aed2cda94274ca7af951839aa8d751c",
+      "glb": "glbs/000-102/4aed2cda94274ca7af951839aa8d751c.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-107/1da92250d23049fc91d56e9d85688a4a",
+      "object_id": "1da92250d23049fc91d56e9d85688a4a",
+      "glb": "glbs/000-107/1da92250d23049fc91d56e9d85688a4a.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-110/2f6ab901c5a84ed6bbdf85a67b22a2ee",
+      "object_id": "2f6ab901c5a84ed6bbdf85a67b22a2ee",
+      "glb": "glbs/000-110/2f6ab901c5a84ed6bbdf85a67b22a2ee.glb",
+      "geometry_frame_count": 8,
+      "input_image_count": 8,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 0
+    },
+    {
+      "object_path": "000-121/664be084d89645a5a371c29f95366e1e",
+      "object_id": "664be084d89645a5a371c29f95366e1e",
+      "glb": "glbs/000-121/664be084d89645a5a371c29f95366e1e.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-130/4ec7390a082146f4818bdeec0b8d00ed",
+      "object_id": "4ec7390a082146f4818bdeec0b8d00ed",
+      "glb": "glbs/000-130/4ec7390a082146f4818bdeec0b8d00ed.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-143/2b3a33b9152d4e91a161cd8a0797b99f",
+      "object_id": "2b3a33b9152d4e91a161cd8a0797b99f",
+      "glb": "glbs/000-143/2b3a33b9152d4e91a161cd8a0797b99f.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-147/1f9a2663eafd40cdb938dcaece3fa249",
+      "object_id": "1f9a2663eafd40cdb938dcaece3fa249",
+      "glb": "glbs/000-147/1f9a2663eafd40cdb938dcaece3fa249.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-150/aab4b8198ac141f4907f89e7a89de8d4",
+      "object_id": "aab4b8198ac141f4907f89e7a89de8d4",
+      "glb": "glbs/000-150/aab4b8198ac141f4907f89e7a89de8d4.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-151/09195522cf8649d0a63459fe0f6d408a",
+      "object_id": "09195522cf8649d0a63459fe0f6d408a",
+      "glb": "glbs/000-151/09195522cf8649d0a63459fe0f6d408a.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-152/48a24c2fe49742b68ed5504c54482a3a",
+      "object_id": "48a24c2fe49742b68ed5504c54482a3a",
+      "glb": "glbs/000-152/48a24c2fe49742b68ed5504c54482a3a.glb",
+      "geometry_frame_count": 24,
+      "input_image_count": 24,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-152/b535b246b768405fa21ac49899a36762",
+      "object_id": "b535b246b768405fa21ac49899a36762",
+      "glb": "glbs/000-152/b535b246b768405fa21ac49899a36762.glb",
+      "geometry_frame_count": 100,
+      "input_image_count": 100,
+      "six_frame_clips": 3,
+      "sixteen_frame_clips": 3
+    },
+    {
+      "object_path": "000-156/1ca234dea53a4320a048fad3c3e2bfe4",
+      "object_id": "1ca234dea53a4320a048fad3c3e2bfe4",
+      "glb": "glbs/000-156/1ca234dea53a4320a048fad3c3e2bfe4.glb",
+      "geometry_frame_count": 100,
+      "input_image_count": 100,
+      "six_frame_clips": 3,
+      "sixteen_frame_clips": 3
+    },
+    {
+      "object_path": "000-156/63992b8328754d7ba78f0c8c07852d6f",
+      "object_id": "63992b8328754d7ba78f0c8c07852d6f",
+      "glb": "glbs/000-156/63992b8328754d7ba78f0c8c07852d6f.glb",
+      "geometry_frame_count": 100,
+      "input_image_count": 100,
+      "six_frame_clips": 3,
+      "sixteen_frame_clips": 3
+    },
+    {
+      "object_path": "000-156/74ab1d8e5e87441a9c7767a3962099fa",
+      "object_id": "74ab1d8e5e87441a9c7767a3962099fa",
+      "glb": "glbs/000-156/74ab1d8e5e87441a9c7767a3962099fa.glb",
+      "geometry_frame_count": 100,
+      "input_image_count": 100,
+      "six_frame_clips": 3,
+      "sixteen_frame_clips": 3
+    },
+    {
+      "object_path": "000-156/76b535535e054dc4a1b9ef64794428f2",
+      "object_id": "76b535535e054dc4a1b9ef64794428f2",
+      "glb": "glbs/000-156/76b535535e054dc4a1b9ef64794428f2.glb",
+      "geometry_frame_count": 20,
+      "input_image_count": 20,
+      "six_frame_clips": 1,
+      "sixteen_frame_clips": 1
+    },
+    {
+      "object_path": "000-156/7f62f2baffbe4865a5dfb2e1b9b25d50",
+      "object_id": "7f62f2baffbe4865a5dfb2e1b9b25d50",
+      "glb": "glbs/000-156/7f62f2baffbe4865a5dfb2e1b9b25d50.glb",
+      "geometry_frame_count": 100,
+      "input_image_count": 100,
+      "six_frame_clips": 3,
+      "sixteen_frame_clips": 3
+    }
+  ],
+  "clips": [
+    {
+      "clip_path": "000-000/01f1cc659cb847a4a7366b84844641c2_000",
+      "object_path": "000-000/01f1cc659cb847a4a7366b84844641c2",
+      "glb": "glbs/000-000/01f1cc659cb847a4a7366b84844641c2.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-005/14f39408ecd943009cfcb273e5e7f691_000",
+      "object_path": "000-005/14f39408ecd943009cfcb273e5e7f691",
+      "glb": "glbs/000-005/14f39408ecd943009cfcb273e5e7f691.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-009/1646ade065cc4674891c596dd48e1b39_000",
+      "object_path": "000-009/1646ade065cc4674891c596dd48e1b39",
+      "glb": "glbs/000-009/1646ade065cc4674891c596dd48e1b39.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-025/1923aeaecf0b45e6ae808c72fb7c93a4_000",
+      "object_path": "000-025/1923aeaecf0b45e6ae808c72fb7c93a4",
+      "glb": "glbs/000-025/1923aeaecf0b45e6ae808c72fb7c93a4.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-032/e2e73395e95443439d8e2d5fcd213c03_000",
+      "object_path": "000-032/e2e73395e95443439d8e2d5fcd213c03",
+      "glb": "glbs/000-032/e2e73395e95443439d8e2d5fcd213c03.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-034/1f83b971e0974b84a2f0f41a191408ed_000",
+      "object_path": "000-034/1f83b971e0974b84a2f0f41a191408ed",
+      "glb": "glbs/000-034/1f83b971e0974b84a2f0f41a191408ed.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-034/654a1d116efb40dc8b59ad635961287c_000",
+      "object_path": "000-034/654a1d116efb40dc8b59ad635961287c",
+      "glb": "glbs/000-034/654a1d116efb40dc8b59ad635961287c.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-034/654a1d116efb40dc8b59ad635961287c_040",
+      "object_path": "000-034/654a1d116efb40dc8b59ad635961287c",
+      "glb": "glbs/000-034/654a1d116efb40dc8b59ad635961287c.glb",
+      "start_frame": 40,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-040/0e7087f99cab442dbc8324e0b03cdb5b_000",
+      "object_path": "000-040/0e7087f99cab442dbc8324e0b03cdb5b",
+      "glb": "glbs/000-040/0e7087f99cab442dbc8324e0b03cdb5b.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-044/131f67f813b44eadb5ddca9ae319e03a_000",
+      "object_path": "000-044/131f67f813b44eadb5ddca9ae319e03a",
+      "glb": "glbs/000-044/131f67f813b44eadb5ddca9ae319e03a.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-044/1cd9982b23cf4756bd4871cf0bee2e4c_000",
+      "object_path": "000-044/1cd9982b23cf4756bd4871cf0bee2e4c",
+      "glb": "glbs/000-044/1cd9982b23cf4756bd4871cf0bee2e4c.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-045/eea11a04e3134378aec27d211d9b31be_000",
+      "object_path": "000-045/eea11a04e3134378aec27d211d9b31be",
+      "glb": "glbs/000-045/eea11a04e3134378aec27d211d9b31be.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-052/0987a1b679434d48bc90e71d94ca547e_000",
+      "object_path": "000-052/0987a1b679434d48bc90e71d94ca547e",
+      "glb": "glbs/000-052/0987a1b679434d48bc90e71d94ca547e.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 15,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": false
+    },
+    {
+      "clip_path": "000-054/2f483cbd01ab4d6aa9ca0b61588f38fd_000",
+      "object_path": "000-054/2f483cbd01ab4d6aa9ca0b61588f38fd",
+      "glb": "glbs/000-054/2f483cbd01ab4d6aa9ca0b61588f38fd.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-064/8e470ef8e7634819a4f095b6cb3abb2a_000",
+      "object_path": "000-064/8e470ef8e7634819a4f095b6cb3abb2a",
+      "glb": "glbs/000-064/8e470ef8e7634819a4f095b6cb3abb2a.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-069/9118b48cd7af42708db79a149ffe7bf0_000",
+      "object_path": "000-069/9118b48cd7af42708db79a149ffe7bf0",
+      "glb": "glbs/000-069/9118b48cd7af42708db79a149ffe7bf0.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-074/4bc632be07404bffb1ef32a0b007346e_000",
+      "object_path": "000-074/4bc632be07404bffb1ef32a0b007346e",
+      "glb": "glbs/000-074/4bc632be07404bffb1ef32a0b007346e.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-077/1fb8279eebb245cc90c2cd96fb7deabd_000",
+      "object_path": "000-077/1fb8279eebb245cc90c2cd96fb7deabd",
+      "glb": "glbs/000-077/1fb8279eebb245cc90c2cd96fb7deabd.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-084/0551f2a45aa7422c89620af07c816f0f_000",
+      "object_path": "000-084/0551f2a45aa7422c89620af07c816f0f",
+      "glb": "glbs/000-084/0551f2a45aa7422c89620af07c816f0f.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-084/df1cd9aa7e9d4c8d83de1702d179d5ba_000",
+      "object_path": "000-084/df1cd9aa7e9d4c8d83de1702d179d5ba",
+      "glb": "glbs/000-084/df1cd9aa7e9d4c8d83de1702d179d5ba.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-085/a8704e56fa154d608169f492a1931652_000",
+      "object_path": "000-085/a8704e56fa154d608169f492a1931652",
+      "glb": "glbs/000-085/a8704e56fa154d608169f492a1931652.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-087/be8c1eab5bc74cf394ae99f29abf5199_000",
+      "object_path": "000-087/be8c1eab5bc74cf394ae99f29abf5199",
+      "glb": "glbs/000-087/be8c1eab5bc74cf394ae99f29abf5199.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-087/d24f4993807b47cab0cef42d44198f31_000",
+      "object_path": "000-087/d24f4993807b47cab0cef42d44198f31",
+      "glb": "glbs/000-087/d24f4993807b47cab0cef42d44198f31.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-091/7503367b467c450c8ecb2789bef3eb1e_000",
+      "object_path": "000-091/7503367b467c450c8ecb2789bef3eb1e",
+      "glb": "glbs/000-091/7503367b467c450c8ecb2789bef3eb1e.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-102/4aed2cda94274ca7af951839aa8d751c_000",
+      "object_path": "000-102/4aed2cda94274ca7af951839aa8d751c",
+      "glb": "glbs/000-102/4aed2cda94274ca7af951839aa8d751c.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-107/1da92250d23049fc91d56e9d85688a4a_000",
+      "object_path": "000-107/1da92250d23049fc91d56e9d85688a4a",
+      "glb": "glbs/000-107/1da92250d23049fc91d56e9d85688a4a.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-110/2f6ab901c5a84ed6bbdf85a67b22a2ee_000",
+      "object_path": "000-110/2f6ab901c5a84ed6bbdf85a67b22a2ee",
+      "glb": "glbs/000-110/2f6ab901c5a84ed6bbdf85a67b22a2ee.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 9,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": false
+    },
+    {
+      "clip_path": "000-121/664be084d89645a5a371c29f95366e1e_000",
+      "object_path": "000-121/664be084d89645a5a371c29f95366e1e",
+      "glb": "glbs/000-121/664be084d89645a5a371c29f95366e1e.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-130/4ec7390a082146f4818bdeec0b8d00ed_000",
+      "object_path": "000-130/4ec7390a082146f4818bdeec0b8d00ed",
+      "glb": "glbs/000-130/4ec7390a082146f4818bdeec0b8d00ed.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-143/2b3a33b9152d4e91a161cd8a0797b99f_000",
+      "object_path": "000-143/2b3a33b9152d4e91a161cd8a0797b99f",
+      "glb": "glbs/000-143/2b3a33b9152d4e91a161cd8a0797b99f.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-147/1f9a2663eafd40cdb938dcaece3fa249_000",
+      "object_path": "000-147/1f9a2663eafd40cdb938dcaece3fa249",
+      "glb": "glbs/000-147/1f9a2663eafd40cdb938dcaece3fa249.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-150/aab4b8198ac141f4907f89e7a89de8d4_000",
+      "object_path": "000-150/aab4b8198ac141f4907f89e7a89de8d4",
+      "glb": "glbs/000-150/aab4b8198ac141f4907f89e7a89de8d4.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-151/09195522cf8649d0a63459fe0f6d408a_000",
+      "object_path": "000-151/09195522cf8649d0a63459fe0f6d408a",
+      "glb": "glbs/000-151/09195522cf8649d0a63459fe0f6d408a.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-152/48a24c2fe49742b68ed5504c54482a3a_000",
+      "object_path": "000-152/48a24c2fe49742b68ed5504c54482a3a",
+      "glb": "glbs/000-152/48a24c2fe49742b68ed5504c54482a3a.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-152/b535b246b768405fa21ac49899a36762_000",
+      "object_path": "000-152/b535b246b768405fa21ac49899a36762",
+      "glb": "glbs/000-152/b535b246b768405fa21ac49899a36762.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-152/b535b246b768405fa21ac49899a36762_040",
+      "object_path": "000-152/b535b246b768405fa21ac49899a36762",
+      "glb": "glbs/000-152/b535b246b768405fa21ac49899a36762.glb",
+      "start_frame": 40,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-152/b535b246b768405fa21ac49899a36762_080",
+      "object_path": "000-152/b535b246b768405fa21ac49899a36762",
+      "glb": "glbs/000-152/b535b246b768405fa21ac49899a36762.glb",
+      "start_frame": 80,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-156/1ca234dea53a4320a048fad3c3e2bfe4_000",
+      "object_path": "000-156/1ca234dea53a4320a048fad3c3e2bfe4",
+      "glb": "glbs/000-156/1ca234dea53a4320a048fad3c3e2bfe4.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-156/1ca234dea53a4320a048fad3c3e2bfe4_040",
+      "object_path": "000-156/1ca234dea53a4320a048fad3c3e2bfe4",
+      "glb": "glbs/000-156/1ca234dea53a4320a048fad3c3e2bfe4.glb",
+      "start_frame": 40,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-156/1ca234dea53a4320a048fad3c3e2bfe4_080",
+      "object_path": "000-156/1ca234dea53a4320a048fad3c3e2bfe4",
+      "glb": "glbs/000-156/1ca234dea53a4320a048fad3c3e2bfe4.glb",
+      "start_frame": 80,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-156/63992b8328754d7ba78f0c8c07852d6f_000",
+      "object_path": "000-156/63992b8328754d7ba78f0c8c07852d6f",
+      "glb": "glbs/000-156/63992b8328754d7ba78f0c8c07852d6f.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-156/63992b8328754d7ba78f0c8c07852d6f_040",
+      "object_path": "000-156/63992b8328754d7ba78f0c8c07852d6f",
+      "glb": "glbs/000-156/63992b8328754d7ba78f0c8c07852d6f.glb",
+      "start_frame": 40,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-156/63992b8328754d7ba78f0c8c07852d6f_080",
+      "object_path": "000-156/63992b8328754d7ba78f0c8c07852d6f",
+      "glb": "glbs/000-156/63992b8328754d7ba78f0c8c07852d6f.glb",
+      "start_frame": 80,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-156/74ab1d8e5e87441a9c7767a3962099fa_000",
+      "object_path": "000-156/74ab1d8e5e87441a9c7767a3962099fa",
+      "glb": "glbs/000-156/74ab1d8e5e87441a9c7767a3962099fa.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-156/74ab1d8e5e87441a9c7767a3962099fa_040",
+      "object_path": "000-156/74ab1d8e5e87441a9c7767a3962099fa",
+      "glb": "glbs/000-156/74ab1d8e5e87441a9c7767a3962099fa.glb",
+      "start_frame": 40,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-156/74ab1d8e5e87441a9c7767a3962099fa_080",
+      "object_path": "000-156/74ab1d8e5e87441a9c7767a3962099fa",
+      "glb": "glbs/000-156/74ab1d8e5e87441a9c7767a3962099fa.glb",
+      "start_frame": 80,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-156/76b535535e054dc4a1b9ef64794428f2_000",
+      "object_path": "000-156/76b535535e054dc4a1b9ef64794428f2",
+      "glb": "glbs/000-156/76b535535e054dc4a1b9ef64794428f2.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-156/7f62f2baffbe4865a5dfb2e1b9b25d50_000",
+      "object_path": "000-156/7f62f2baffbe4865a5dfb2e1b9b25d50",
+      "glb": "glbs/000-156/7f62f2baffbe4865a5dfb2e1b9b25d50.glb",
+      "start_frame": 0,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-156/7f62f2baffbe4865a5dfb2e1b9b25d50_040",
+      "object_path": "000-156/7f62f2baffbe4865a5dfb2e1b9b25d50",
+      "glb": "glbs/000-156/7f62f2baffbe4865a5dfb2e1b9b25d50.glb",
+      "start_frame": 40,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    },
+    {
+      "clip_path": "000-156/7f62f2baffbe4865a5dfb2e1b9b25d50_080",
+      "object_path": "000-156/7f62f2baffbe4865a5dfb2e1b9b25d50",
+      "glb": "glbs/000-156/7f62f2baffbe4865a5dfb2e1b9b25d50.glb",
+      "start_frame": 80,
+      "stride": 1,
+      "available_render_frames_per_view": 16,
+      "six_frame_evaluation": true,
+      "sixteen_frame_evaluation": true
+    }
+  ],
+  "archives": {
+    "animated_glbs": {
+      "files": 40,
+      "bytes_uncompressed": 215047976,
+      "extensions": {
+        ".glb": 40
+      }
+    },
+    "input_images": {
+      "files": 1441,
+      "bytes_uncompressed": 942674154,
+      "extensions": {
+        ".png": 1331,
+        ".json": 110
+      }
+    },
+    "evaluation_images": {
+      "files": 3418,
+      "bytes_uncompressed": 2201784970,
+      "extensions": {
+        ".png": 3168,
+        ".json": 250
+      }
+    }
+  },
+  "source_directories": {
+    "geometry_reference": "Motion2VecSets/obj_test_33",
+    "input_images": "Motion2VecSets/obj_test_33",
+    "evaluation_images": "Motion2VecSets/test_gen_normal_gt",
+    "animated_glbs": "Hunyuan3D-2.1/obj_v1/glbs"
+  }
+}

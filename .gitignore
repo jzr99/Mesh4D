@@ -184,3 +184,9 @@ white_mesh_remesh.obj
 hy3dpaint/ckpt/
 *.glb
 
+# Downloaded benchmark data, metric weights, and generated evaluation results
+/data/mesh4d_benchmark/
+/benchmark/downloads/
+/benchmark/results/
+/benchmark/weights/
+
