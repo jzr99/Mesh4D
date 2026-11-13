@@ -5,6 +5,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 from zipfile import ZipFile
 
 import numpy as np
@@ -13,6 +14,7 @@ from PIL import Image
 from benchmark.download import extract_archives, verify_archives
 from benchmark.evaluate import frame_pairs, load_clips, main
 from benchmark.metrics import legacy_frechet_score, load_rgb, psnr
+from benchmark.render import render_jobs
 
 
 class EvaluationTests(unittest.TestCase):
@@ -56,6 +58,56 @@ class EvaluationTests(unittest.TestCase):
         self.assertEqual(load_clips(self.root / 'manifest.json', 16), self.clips[:1])
         with self.assertRaises(ValueError):
             load_clips(self.root / 'manifest.json', 16, ['000-002/short_000'])
+
+    def test_sixteen_frame_evaluation_includes_final_pose(self):
+        clip = self.clips[0]
+        pairs = frame_pairs(clip, self.gt, self.pred, 16)
+        self.assertEqual(len(pairs), 64)
+        self.assertEqual(pairs[15].pred.name, 'front_frame0031.png')
+        self.assertEqual(pairs[15].gt.name, 'front_frame0055.png')
+        image = Image.fromarray(np.arange(16 * 16 * 3, dtype=np.uint8).reshape(16, 16, 3))
+        for pair in pairs:
+            for path in (pair.pred, pair.gt):
+                path.parent.mkdir(parents=True, exist_ok=True)
+                image.save(path)
+        out = self.root / 'results16'
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(main(self.arguments('--frames', '16', '--metrics', 'psnr',
+                                                 '--image-size', '16', '--output-dir', str(out))), 0)
+        result = json.loads((out / 'summary.json').read_text())
+        self.assertEqual(result['image_pairs'], 64)
+        self.assertTrue(result['full_split'])
+        self.assertEqual(result['metrics']['psnr'], 'Infinity')
+        pairs[-1].pred.unlink()
+        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+            with self.assertRaises(SystemExit):
+                main(self.arguments('--frames', '16', '--dry-run'))
+
+    def test_sixteen_frame_render_plan_and_mismatched_prediction_rejection(self):
+        clip = self.clips[0]
+        model = self.root / 'meshes/000-001/long_40_1/combined_gen_mtl.glb'
+        model.parent.mkdir(parents=True)
+        model.touch()
+        camera_dir = self.gt / clip['clip_path']
+        camera_dir.mkdir(parents=True)
+        camera = {'matrix_world': [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 2], [0, 0, 0, 1]],
+                  'x_fov': 0.69, 'y_fov': 0.69}
+        for view in ('front', 'right', 'back', 'left'):
+            (camera_dir / f'{view}.json').write_text(json.dumps(camera))
+        args = SimpleNamespace(manifest=None, benchmark_root=self.root, camera_root=None, frames=16,
+                               clip=None, mesh_root=self.root / 'meshes', output_dir=self.pred,
+                               overwrite=False, blender='/path/with spaces/blender', resolution=512,
+                               samples=64, device='CPU', preserve_coordinates=False, exclude_object=[])
+        jobs = render_jobs(args)
+        self.assertEqual(len(jobs), 1)
+        command = jobs[0]['command']
+        self.assertEqual(command[0], '/path/with spaces/blender')
+        self.assertEqual(command[command.index('--frame-end') + 1], '31')
+        self.assertIn('--mesh4d-coordinates', command)
+        self.assertIn(str(camera_dir.resolve()), command)
+        (model.parent / 'inference.json').write_text(json.dumps({'frames': 6}))
+        with self.assertRaises(ValueError):
+            render_jobs(args)
 
     def test_matching_ground_truth_template(self):
         pairs = frame_pairs(self.clips[0], self.gt, self.gt, 6,

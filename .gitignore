@@ -193,3 +193,9 @@ hy3dpaint/ckpt/
 # Generated render sequences and previews
 /visualization/results/
 
+# Model checkpoints and download caches
+/ckpt
+/checkpoints/downloads/
+*.ckpt
+*.ckpt.part[0-9]*
+

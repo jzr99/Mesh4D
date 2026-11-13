@@ -15,6 +15,7 @@
 import copy
 import importlib
 import inspect
+import json
 import os
 from typing import List, Optional, Union
 
@@ -905,6 +906,7 @@ class Hunyuan3DDiTFlowMatchingPipeline(Hunyuan3DDiTPipeline):
         gen_mesh_list=None,
         not_simplify=False,
         combine_glb=False,
+        alignment_points=None,
         **kwargs,
     ) -> List[List[trimesh.Trimesh]]:
         # mean_metrics = {'name': batch['model_name'][0]}
@@ -948,8 +950,22 @@ class Hunyuan3DDiTFlowMatchingPipeline(Hunyuan3DDiTPipeline):
 
 
 
-            # converted_mesh = trimesh.Trimesh(vertices=TY, faces=converted_mesh.faces, process=False)
-            # here we do not align the converted_mesh
+            # Optional evaluation registration follows pipelines_video_newvae_all.py.
+            # Image-only inference keeps the generated mesh's normalized coordinates.
+            registration = None
+            if alignment_points is not None:
+                target_points = np.asarray(alignment_points, dtype=np.float64)
+                if (target_points.ndim != 2 or target_points.shape[1] != 3
+                        or len(target_points) < 3 or not np.isfinite(target_points).all()):
+                    raise ValueError('alignment_points must be a finite N x 3 point cloud.')
+                registration = RigidRegistration(X=target_points, Y=np.asarray(converted_mesh.vertices),
+                                                 w=0.1, tolerance=0.01)
+                vertices, (reg_scale, reg_rotation, reg_translation) = registration.register()
+                converted_mesh.vertices = vertices
+                with open(os.path.join(vis_dir_gen_mesh, 'alignment.json'), 'w') as handle:
+                    json.dump({'method': 'first-pose CPD', 'uses_ground_truth': True,
+                               'scale': float(reg_scale), 'rotation': reg_rotation.tolist(),
+                               'translation': reg_translation.tolist()}, handle, indent=2)
             converted_mesh.export(f'{vis_dir_gen_mesh}/registered_gen_mesh.obj')
 
             print('after registration')
@@ -986,6 +1002,9 @@ class Hunyuan3DDiTFlowMatchingPipeline(Hunyuan3DDiTPipeline):
                     gen_mesh_list_i_converted_mesh = trimesh.load(f'{vis_dir_gen_mesh_list}/simplified_normalized_gen_mesh_{j:02d}.obj')
                     # gen_mesh_list_i_converted_mesh_vertices = reg.transform_point_cloud(Y=np.array(gen_mesh_list_i_converted_mesh.vertices))
                     gen_mesh_list_i_converted_mesh_vertices = gen_mesh_list_i_converted_mesh.vertices
+                    if registration is not None:
+                        gen_mesh_list_i_converted_mesh_vertices = registration.transform_point_cloud(
+                            Y=np.asarray(gen_mesh_list_i_converted_mesh_vertices))
                     gen_mesh_list_i_converted_mesh = trimesh.Trimesh(vertices=gen_mesh_list_i_converted_mesh_vertices, faces=gen_mesh_list_i_converted_mesh.faces, process=False)
                     gen_mesh_list_i_converted_mesh.export(f'{vis_dir_gen_mesh_list}/registered_gen_mesh_{j:02d}.obj')
                     registered_gen_mesh_list.append(gen_mesh_list_i_converted_mesh)

@@ -24,6 +24,8 @@ class FramePair:
 
 
 def load_clips(manifest_path, frames, selected=None):
+    if frames not in (6, 16):
+        raise ValueError('The benchmark defines only 6-frame and 16-frame splits.')
     manifest = json.loads(manifest_path.read_text())
     flag = 'six_frame_evaluation' if frames == 6 else 'sixteen_frame_evaluation'
     clips = [c for c in manifest['clips'] if c[flag]]

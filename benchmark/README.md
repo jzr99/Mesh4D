@@ -162,6 +162,76 @@ whole incomplete clips and records them in the result. Such a result is a subset
 evaluation, not the full benchmark. `--clip <clip_path>` selects an explicit clip
 and can be repeated for debugging. Existing result files require `--overwrite`.
 
+## Sixteen-frame inference, rendering, and evaluation
+
+First [download the 16-frame checkpoints](../checkpoints/README.md) and extract
+the benchmark archives. All commands below run from the repository root.
+
+```bash
+python hy3dshape/infer_16.py \
+  --benchmark-root data/mesh4d_benchmark \
+  --output-dir hy3dshape/output_folder/test/benchmark_16 --dry-run
+
+python hy3dshape/infer_16.py \
+  --benchmark-root data/mesh4d_benchmark \
+  --output-dir hy3dshape/output_folder/test/benchmark_16
+```
+
+The command uses exactly the manifest's 48 sixteen-frame clips. Add `--clip`
+with a manifest `clip_path` to each command for a subset check. Inference uses
+the image-only pipeline by default. If the original per-frame PLY data is
+available, add `--reference-geometry-root /path/to/obj_test_33` to reproduce
+the research pipeline's first-pose ground-truth registration. This setting
+affects the model's inputs and predictions; record it when comparing methods.
+See the [inference guide](../hy3dshape/INFERENCE_16.md#benchmark-inputs-and-alignment).
+
+Render all selected predictions with the saved benchmark cameras:
+
+```bash
+python benchmark/render.py \
+  --benchmark-root data/mesh4d_benchmark \
+  --mesh-root hy3dshape/output_folder/test/benchmark_16 \
+  --output-dir benchmark/results/renders_16 \
+  --frames 16 --blender /path/to/blender
+```
+
+Omit `--blender` when running in a Python environment with Blender 4.0's `bpy`.
+Add `--dry-run` to check every mesh and camera before rendering. Use `--device
+CUDA` or `--device OPTIX` for supported GPU rendering; the default is CPU.
+Some older research GLBs contain an extra default Blender mesh named `Cube`.
+If it is present, add `--exclude-object Cube` to exclude it from rendering and
+normalization. The exporter test checks that new animations contain only the
+intended mesh.
+
+The batch renderer applies the original Mesh4D prediction-rendering transform:
+fit the canonical pose at Blender frame 0 to a centered unit cube, then rotate
+by -90 degrees about X. This is distinct from the optional ground-truth CPD
+registration performed before inference. For externally prepared meshes already
+in benchmark camera coordinates, pass `--preserve-coordinates` to skip this
+transform. It uses fixed studio lighting; the source renderer's random lights
+cannot be recovered from the published camera JSONs. These differences must be
+accounted for when comparing historical RGB scores.
+
+The output contains frames 1, 3, …, 31 for each of four views. Check and score it:
+
+```bash
+python benchmark/evaluate.py \
+  --benchmark-root data/mesh4d_benchmark \
+  --pred-root benchmark/results/renders_16 --frames 16 --dry-run
+
+python benchmark/evaluate.py \
+  --benchmark-root data/mesh4d_benchmark \
+  --pred-root benchmark/results/renders_16 --frames 16 \
+  --output-dir benchmark/results/mesh4d_16
+```
+
+Full coverage is **48 clips, 16 frames, four views, 3,072 image pairs**. Missing
+predictions fail preflight. Existing render/metric results require a new output
+directory or explicit `--overwrite`. To continue a partially rendered split
+without overwriting completed clips, repeat `--clip` for the remaining clips.
+`--manifest`, `--input-root` (inference), and `--camera-root` (rendering) support
+the original research directory trees without copying them.
+
 ## Metrics and outputs
 
 Default metrics are PSNR (higher is better), SSIM (higher), VGG LPIPS (lower),

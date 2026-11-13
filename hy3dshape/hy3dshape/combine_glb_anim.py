@@ -214,7 +214,9 @@ def combine_glb_objs(input_files, output_glb, fps=24, frame_duration=10, transit
     
     # Update frame range
     scene.frame_start = 0
-    scene.frame_end = current_frame - 1
+    # Include the final pose (frame 31 for 16 poses with two-frame transitions).
+    # Otherwise the glTF export can truncate the last transition halfway.
+    scene.frame_end = current_frame
     
     # Update fcurves
     for fcurve in sk_action.fcurves:

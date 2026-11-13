@@ -11,6 +11,37 @@ from visualization import preview, render
 
 
 class VisualizationTests(unittest.TestCase):
+    @unittest.skipUnless(importlib.util.find_spec('bpy'), 'requires Blender bpy')
+    def test_sixteen_pose_glb_retains_every_keyframe(self):
+        import bpy
+        spec = importlib.util.spec_from_file_location('mesh4d_combine', Path(__file__).resolve().parents[2]
+                                                      / 'hy3dshape/hy3dshape/combine_glb_anim.py')
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            paths = []
+            for t in range(16):
+                path = root / f'pose_{t:02d}.obj'
+                path.write_text(f'v 0 0 0\nv {1 + t / 10} 0 0\nv 0 1 0\nf 1 2 3\n')
+                paths.append(str(path))
+            output = root / 'combined_gen_mtl.glb'
+            module.combine_glb_objs(paths, str(output), fps=24, frame_duration=0, transition_frames=2)
+            self.assertEqual(bpy.context.scene.frame_end, 31)
+            bpy.ops.wm.read_factory_settings(use_empty=True)
+            bpy.context.scene.render.fps = 24
+            bpy.ops.import_scene.gltf(filepath=str(output))
+            self.assertEqual(len([o for o in bpy.context.scene.objects if o.type == 'MESH']), 1)
+            for t in range(16):
+                lower, upper = render.scene_bounds(bpy, [2 * t + 1])
+                self.assertAlmostEqual(upper[0] - lower[0], 1 + t / 10, places=4)
+            transform = render.mesh4d_coordinates(bpy)
+            lower, upper = render.scene_bounds(bpy, [0])
+            self.assertEqual(transform['reference_frame'], 0)
+            self.assertAlmostEqual(max(b - a for a, b in zip(lower, upper)), 1, places=4)
+            for a, b in zip(lower, upper):
+                self.assertAlmostEqual((a + b) / 2, 0, places=4)
+
     def test_frame_selection_and_invalid_ranges(self):
         self.assertEqual(render.frame_numbers(1, 11, 2), [1, 3, 5, 7, 9, 11])
         self.assertEqual(render.frame_numbers(40, 42, 1), [40, 41, 42])

@@ -129,6 +129,14 @@ For sixteen-frame Mesh4D output, use `--frame-end 31` with the same start and
 step. Check that these timeline indices correspond to your model's predictions;
 the original evaluator pairs prediction `2*t + 1` with reference `start + t`.
 
+For raw `infer_16.py` output, also add `--mesh4d-coordinates`. This reproduces
+the research prediction renderer's normalization of the canonical pose at frame
+0 followed by a -90-degree X rotation. It requires `--normalize none` to avoid
+applying a second normalization, and records the transform in `render.json`.
+Omit this flag for geometry already transformed into the saved camera coordinates.
+The [benchmark batch renderer](../benchmark/README.md#sixteen-frame-inference-rendering-and-evaluation)
+applies this convention by default and renders the entire selected split.
+
 This provides the camera and filename interface to the evaluator. It does **not**
 reproduce the original benchmark lighting: the research rendering scripts in
 Motion2VecSets randomized their lights, and the archived camera JSON files do

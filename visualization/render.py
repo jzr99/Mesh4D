@@ -83,6 +83,20 @@ def normalize_scene(bpy, frames, mode):
             'source_bounds': [lower, upper]}
 
 
+def mesh4d_coordinates(bpy):
+    """Match the research prediction renderer: canonical bounds, then -90 degrees about X."""
+    from mathutils import Matrix
+    normalization = normalize_scene(bpy, [0], 'first-frame')
+    rotation = Matrix.Rotation(-math.pi / 2, 4, 'X')
+    for obj in bpy.context.scene.objects:
+        if obj.parent is None:
+            obj.matrix_world = rotation @ obj.matrix_world
+    bpy.context.view_layer.update()
+    normalization.update(mode='mesh4d-first-pose', reference_frame=0,
+                         rotation=[list(row) for row in rotation])
+    return normalization
+
+
 def setup_render(bpy, args):
     scene = bpy.context.scene
     scene.render.engine = 'CYCLES'
@@ -171,7 +185,8 @@ def render(args):
                for frame in frames for view in views]
     if not args.overwrite and any(path.exists() for path in outputs + [args.output_dir / 'render.json']):
         raise FileExistsError('Render outputs already exist; use another directory or --overwrite.')
-    normalization = normalize_scene(bpy, frames, args.normalize)
+    normalization = (mesh4d_coordinates(bpy) if args.mesh4d_coordinates
+                     else normalize_scene(bpy, frames, args.normalize))
     setup_render(bpy, args)
     camera = bpy.data.objects.new('Mesh4DCamera', bpy.data.cameras.new('Mesh4DCamera'))
     scene.collection.objects.link(camera)
@@ -236,6 +251,8 @@ def main(argv=None):
     parser.add_argument('--normalize', choices=('sequence', 'first-frame', 'none'), default='sequence',
                         help='Fit all selected frames into a unit cube, use the first frame, or preserve coordinates.')
     parser.add_argument('--camera-dir', type=Path, help='Directory with <view>.json benchmark cameras; requires --normalize none.')
+    parser.add_argument('--mesh4d-coordinates', action='store_true',
+                        help='Apply the research Mesh4D GLB canonical normalization/axis conversion; requires --normalize none.')
     parser.add_argument('--turntable', action='store_true', help='Orbit once over the selected frames instead of rendering fixed views.')
     parser.add_argument('--overwrite', action='store_true')
     if argv is None:
@@ -248,6 +265,8 @@ def main(argv=None):
             raise ValueError('Use positive FPS, step and samples, and resolution >= 16.')
         if args.camera_dir and (args.normalize != 'none' or args.turntable):
             raise ValueError('--camera-dir requires --normalize none and fixed views.')
+        if args.mesh4d_coordinates and args.normalize != 'none':
+            raise ValueError('--mesh4d-coordinates requires --normalize none to avoid normalizing twice.')
         args.views = list(dict.fromkeys(args.views))
         render(args)
         return 0

@@ -12,6 +12,7 @@
 
 ## 🔥 News
 
+- Nov 7, 2026: Sixteen-frame checkpoints, inference, and benchmark rendering are available.
 - Jan 9, 2026: 🤗 We release the first version of Mesh4D!
 - Nov 5, 2026: 🤗 We release the MeshBench Bechmark and visualization code!
 
@@ -43,11 +44,21 @@ python ./setup_im2mesh.py build_ext --inplace
 cd ..
 ```
 
-Download model checkpoint
+Download the original six-frame model checkpoints:
 ```bash
 mkdir ckpt
 gdown 1e9YGQAuFr5BDN2--srDEMnoULb4ZP5sx -O ./ckpt/ # deformation vae
 gdown 1jeNwiP9-B1uyKvk3_yBN7Y9-D7YQxBc5 -O ./ckpt/ # denoiser
+```
+
+For the newer **sixteen-frame** VAE and denoiser, use the
+[checkpoint downloader](checkpoints/README.md). It downloads the complete files from
+[zerenjiang/Mesh4D_16 on Hugging Face](https://huggingface.co/zerenjiang/Mesh4D_16)
+into `ckpt/16frames/` and verifies their SHA-256 checksums:
+
+```bash
+python -m pip install 'huggingface-hub==0.30.2'
+python checkpoints/download.py
 ```
 
 ## 😈 Inference
@@ -57,6 +68,18 @@ cd hy3dshape
 python infer.py
 ```
 For other in-the-wild videos, you need to first segment foreground object out and save it as a sequence of RGBA images with white background.
+
+For **sixteen-frame inference**, run from the repository root with 16 segmented
+RGBA frames named `0.png` through `15.png`:
+
+```bash
+python hy3dshape/infer_16.py --input-dir /path/to/rgba_frames --dry-run
+python hy3dshape/infer_16.py --input-dir /path/to/rgba_frames \
+  --output-dir hy3dshape/output_folder/test/my_video_16
+```
+
+See the [sixteen-frame guide](hy3dshape/INFERENCE_16.md) for checkpoint overrides,
+custom frame names, resuming a run, benchmark inputs, and evaluation alignment.
 
 ## 😸 Evaluation
 See [the benchmark guide](benchmark/README.md) for the
@@ -79,6 +102,9 @@ python benchmark/evaluate.py \
 
 The evaluator reports PSNR, SSIM, LPIPS, and CLIP image similarity. It checks all
 required frames before scoring and supports the original Mesh4D render layout.
+The [sixteen-frame workflow](benchmark/README.md#sixteen-frame-inference-rendering-and-evaluation)
+connects the new inference command, batch rendering with benchmark cameras,
+and `--frames 16` evaluation over 48 clips.
 Optional historical I3D scoring and alternate filename layouts are documented
 in the guide. Archive publication to Drive has not yet been verified; local
 archives can already be verified and extracted with the command above.
