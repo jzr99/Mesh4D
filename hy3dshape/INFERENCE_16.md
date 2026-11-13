@@ -1,9 +1,12 @@
 # Sixteen-frame inference
 
 Use the existing Mesh4D CUDA environment and Blender 4.0's `bpy` Python module.
-The deformation VAE and motion denoiser must both use the newer 16-frame
-checkpoint pair from [Hugging Face](https://huggingface.co/zerenjiang/Mesh4D_16).
+Use the 16-frame R3 denoiser (`diffuse_r3_ckpt-step=00003000.ckpt`) with
+`vae_bone_r2_16_00001500.ckpt` from [Hugging Face](https://huggingface.co/zerenjiang/Mesh4D_16).
 [Download and verify them](../checkpoints/README.md) into `ckpt/16frames/`. The original six-frame `infer.py` remains available.
+
+When switching from R6, rerun `python checkpoints/download.py` and choose a new
+output directory. `--resume` requires the same checkpoint paths as the saved run.
 
 Run these commands from the repository root:
 

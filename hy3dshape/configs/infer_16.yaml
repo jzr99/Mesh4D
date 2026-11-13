@@ -1,4 +1,4 @@
-# Matches the newer batt16_pretrain VAE and diffusion_r6_new_3000 checkpoints.
+# Matches the batt16_pretrain VAE and diffuse_r3_ckpt-step=00003000 checkpoints.
 frames: 16
 image_size: 518
 padding_ratio: 1.15

@@ -1,4 +1,5 @@
 import importlib.util
+import json
 import sys
 import tempfile
 import unittest
@@ -15,6 +16,14 @@ from inference_utils import (checkpoint_model, input_sequences, load_batch, load
 
 
 class CheckpointTests(unittest.TestCase):
+    def test_default_checkpoint_paths_match_release_manifest(self):
+        release = json.loads((REPO / 'checkpoints/manifest_16.json').read_text())
+        _, args = parse_args(['--input-dir', '/unused'])
+        self.assertEqual([args.vae_checkpoint.name, args.denoiser_checkpoint.name],
+                         [record['name'] for record in release['checkpoints']])
+        self.assertEqual(args.vae_checkpoint.parent, REPO / 'ckpt/16frames')
+        self.assertEqual(args.denoiser_checkpoint.parent, REPO / 'ckpt/16frames')
+
     @unittest.skipUnless(importlib.util.find_spec('torch') and importlib.util.find_spec('accelerate'), 'requires ML environment')
     def test_strict_component_loading_rejects_missing_or_wrong_tensors(self):
         import torch

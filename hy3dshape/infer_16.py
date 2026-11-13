@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the newer 16-frame Mesh4D VAE/denoiser on RGBA video frames."""
+"""Run the 16-frame Mesh4D R3 denoiser and VAE on RGBA video frames."""
 import argparse
 import gc
 import json
@@ -30,7 +30,7 @@ def parse_args(argv=None):
     parser.add_argument('--vae-checkpoint', type=Path,
                         default=REPO / 'ckpt/16frames/vae_bone_r2_16_00001500.ckpt')
     parser.add_argument('--denoiser-checkpoint', type=Path,
-                        default=REPO / 'ckpt/16frames/diffusion_r6_new_3000.ckpt')
+                        default=REPO / 'ckpt/16frames/diffuse_r3_ckpt-step=00003000.ckpt')
     parser.add_argument('--output-dir', type=Path, default=HERE / 'output_folder/test/infer_16')
     parser.add_argument('--initial-mesh', type=Path,
                         help='Use an existing canonical mesh for one clip; bypass shape generation and painting.')

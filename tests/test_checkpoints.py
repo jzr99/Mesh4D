@@ -119,10 +119,10 @@ class CheckpointDownloadTests(unittest.TestCase):
     def test_release_manifest_and_invalid_metadata(self):
         release = read_manifest(REPO / 'checkpoints/manifest_16.json')
         self.assertEqual(release['repo_id'], 'zerenjiang/Mesh4D_16')
-        self.assertEqual(release['revision'], 'ab0d8630bfb7cbff99f615ed5324bb64698e3a96')
+        self.assertEqual(release['revision'], 'a2d8b4a2bed73b6e52a8866ca95055898c3d0a91')
         self.assertEqual([c['name'] for c in release['checkpoints']],
-                         ['vae_bone_r2_16_00001500.ckpt', 'diffusion_r6_new_3000.ckpt'])
-        self.assertEqual(sum(c['size'] for c in release['checkpoints']), 27709068796)
+                         ['vae_bone_r2_16_00001500.ckpt', 'diffuse_r3_ckpt-step=00003000.ckpt'])
+        self.assertEqual(sum(c['size'] for c in release['checkpoints']), 27709068732)
         cases = [
             ('name', '../escape.ckpt'),
             ('name', 'folder\\escape.ckpt'),

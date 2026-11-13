@@ -51,7 +51,7 @@ gdown 1e9YGQAuFr5BDN2--srDEMnoULb4ZP5sx -O ./ckpt/ # deformation vae
 gdown 1jeNwiP9-B1uyKvk3_yBN7Y9-D7YQxBc5 -O ./ckpt/ # denoiser
 ```
 
-For the newer **sixteen-frame** VAE and denoiser, use the
+For the **sixteen-frame R3** denoiser and its VAE, use the
 [checkpoint downloader](checkpoints/README.md). It downloads the complete files from
 [zerenjiang/Mesh4D_16 on Hugging Face](https://huggingface.co/zerenjiang/Mesh4D_16)
 into `ckpt/16frames/` and verifies their SHA-256 checksums:

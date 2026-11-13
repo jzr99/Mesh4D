@@ -2,7 +2,7 @@
   "format": "huggingface-v1",
   "frames": 16,
   "repo_id": "zerenjiang/Mesh4D_16",
-  "revision": "ab0d8630bfb7cbff99f615ed5324bb64698e3a96",
+  "revision": "a2d8b4a2bed73b6e52a8866ca95055898c3d0a91",
   "repo_url": "https://huggingface.co/zerenjiang/Mesh4D_16",
   "checkpoints": [
     {
@@ -11,9 +11,9 @@
       "sha256": "6f97405f364719bf4a77019c176ccff6a3f4f6a31943ef40ccc9c8e567e96332"
     },
     {
-      "name": "diffusion_r6_new_3000.ckpt",
-      "size": 24380922293,
-      "sha256": "22330fcf45248d4805a3499b80bf4ca0ad439eec8bd73f8b07cbca16f3cbac4b"
+      "name": "diffuse_r3_ckpt-step=00003000.ckpt",
+      "size": 24380922229,
+      "sha256": "a2c0d7ec831bdd3db47777a1f5780d2d95e46ada05fc8d7a545ce9a66a260d12"
     }
   ]
 }
