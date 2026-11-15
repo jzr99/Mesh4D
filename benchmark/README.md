@@ -164,18 +164,26 @@ and can be repeated for debugging. Existing result files require `--overwrite`.
 
 ## Sixteen-frame inference, rendering, and evaluation
 
-First [download the 16-frame checkpoints](../checkpoints/README.md) and extract
-the benchmark archives. All commands below run from the repository root.
+First download the six-frame checkpoints (main [README](../README.md)) and
+extract the benchmark archives. All commands below run from the repository root.
+By default, the six-frame model runs chunk-wise over each 16-frame clip
+([long-video guide](../hy3dshape/INFERENCE_LONG.md)):
 
 ```bash
-python hy3dshape/infer_16.py \
-  --benchmark-root data/mesh4d_benchmark \
+python hy3dshape/infer_long.py \
+  --benchmark-root data/mesh4d_benchmark --num-frames 16 \
   --output-dir hy3dshape/output_folder/test/benchmark_16 --dry-run
 
-python hy3dshape/infer_16.py \
-  --benchmark-root data/mesh4d_benchmark \
+python hy3dshape/infer_long.py \
+  --benchmark-root data/mesh4d_benchmark --num-frames 16 \
   --output-dir hy3dshape/output_folder/test/benchmark_16
 ```
+
+To evaluate the single-pass sixteen-frame model instead,
+[download its checkpoints](../checkpoints/README.md) and run
+`python hy3dshape/infer_16.py` with the same `--benchmark-root` and
+`--output-dir` arguments (without `--num-frames`). Both commands write the same
+layout, so the rendering and evaluation commands below apply to either.
 
 The command uses exactly the manifest's 48 sixteen-frame clips. Add `--clip`
 with a manifest `clip_path` to each command for a subset check. Inference uses

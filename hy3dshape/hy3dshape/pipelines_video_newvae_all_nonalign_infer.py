@@ -907,8 +907,11 @@ class Hunyuan3DDiTFlowMatchingPipeline(Hunyuan3DDiTPipeline):
         not_simplify=False,
         combine_glb=False,
         alignment_points=None,
+        sample_seed=None,
         **kwargs,
     ) -> List[List[trimesh.Trimesh]]:
+        # sample_seed fixes the random subsets of mesh points used for the shape condition and the
+        # canonical points; None keeps the original behaviour (fresh OS entropy on every call).
         # mean_metrics = {'name': batch['model_name'][0]}
         mean_metrics = {'name': batch['model_name'][0]}
         converted_mesh = None
@@ -1069,7 +1072,7 @@ class Hunyuan3DDiTFlowMatchingPipeline(Hunyuan3DDiTPipeline):
             vertex = torch.from_numpy(converted_mesh.vertices).float().to(device).unsqueeze(0)
             vertex_normals = torch.from_numpy(converted_mesh.vertex_normals).float().to(device).unsqueeze(0)
             shape_input = torch.cat([vertex, vertex_normals, torch.zeros_like(vertex[:,:,:1])], dim=-1)
-            shape_input = self.vae.encoder._sample_features(shape_input, num_tokens=2048)
+            shape_input = self.vae.encoder._sample_features(shape_input, num_tokens=2048, seed=sample_seed)
             # shape_input = self.vae.model._sample_features(shape_input, num_tokens=2048)
             # torch.cat([batch['surface_src'][:,0], torch.zeros_like(batch['surface_src'][:,0,:,-1:])], dim=-1)
         else:
@@ -1087,7 +1090,7 @@ class Hunyuan3DDiTFlowMatchingPipeline(Hunyuan3DDiTPipeline):
         # latents = self.z_scale_factor * latents
         if converted_mesh is not None:
             # canonical_points = self.vae.model._sample_features(vertex, num_tokens=256)
-            canonical_points = self.vae.encoder._sample_features(vertex, num_tokens=256)
+            canonical_points = self.vae.encoder._sample_features(vertex, num_tokens=256, seed=sample_seed)
 
         # B, T, N, C = latents_gt.shape
 

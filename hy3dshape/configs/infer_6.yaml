@@ -1,0 +1,82 @@
+# The original six-frame model (configs/infer.yaml's model, flattened): ckpt/denoiser.ckpt + ckpt/deform_vae.ckpt.
+frames: 6
+image_size: 518
+padding_ratio: 1.15
+model:
+  z_scale_factor: 1.0039506158752403
+  denoiser_cfg:
+    target: hy3dshape.models.denoisers.hunyuandit_video_scale_batt.HunYuanDiTPlainVideo
+    params:
+      input_size: 4096
+      in_channels: 64
+      hidden_size: 2048
+      context_dim: 1024
+      depth: 21
+      num_heads: 16
+      qk_norm: true
+      text_len: 1370
+      with_decoupled_ca: false
+      use_attention_pooling: false
+      qk_norm_type: rms
+      qkv_bias: false
+      use_pos_emb: false
+      num_moe_layers: 6
+      num_experts: 8
+      moe_top_k: 2
+      use_temp_pe: true
+      use_spatial_pe: true
+      use_temporal_rope: false
+      num_frames: 6
+      use_temporal_attention: true
+      use_shape_attention: true
+      cross_attention_3_dim: 1024
+      cross_attention_3_norm_type: None
+  first_stage_config:
+    target: hy3dshape.models.autoencoders.model_deform_batt.DeformVAEHY
+    params:
+      num_frames: 6
+      num_latents: 4096
+      embed_dim: 64
+      num_freqs: 8
+      include_pi: false
+      heads: 16
+      width: 1024
+      num_encoder_layers: 8
+      num_decoder_layers: 16
+      qkv_bias: false
+      qk_norm: true
+      scale_factor: 1.0039506158752403
+      geo_decoder_mlp_expand_ratio: 4
+      geo_decoder_downsample_ratio: 1
+      geo_decoder_ln_post: true
+      point_feats: 4
+      pc_size: 81920
+      pc_sharpedge_size: 0
+  cond_stage_config:
+    target: hy3dshape.models.conditioner.SingleImageEncoder
+    params:
+      drop_ratio: 0.1
+      main_image_encoder:
+        type: DinoImageEncoder
+        kwargs:
+          version: facebook/dinov2-large
+          image_size: 518
+          use_cls_token: true
+  cond_stage_config_2:
+    target: hy3dshape.models.autoencoders.ShapeVAE
+    from_pretrained: tencent/Hunyuan3D-2.1
+    params:
+      pc_size: 2048
+      downsample_ratio: 8
+      num_latents: 256
+      pc_sharpedge_size: 0
+  image_processor_cfg:
+    target: hy3dshape.preprocessors.VideoProcessorV2
+    params: {}
+  pipeline_cfg:
+    target: hy3dshape.pipelines_video_newvae_all_nonalign_infer.Hunyuan3DDiTFlowMatchingPipeline
+    params:
+      latent_shape:
+      - 6
+      - 256
+      - 64

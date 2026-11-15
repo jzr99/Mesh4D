@@ -12,6 +12,7 @@
 
 ## 🔥 News
 
+- Nov 15, 2026: Chunk-wise six-frame inference is now the default for 16-frame and longer videos.
 - Nov 7, 2026: Sixteen-frame checkpoints, inference, and benchmark rendering are available.
 - Jan 9, 2026: 🤗 We release the first version of Mesh4D!
 - Nov 5, 2026: 🤗 We release the MeshBench Bechmark and visualization code!
@@ -44,7 +45,9 @@ python ./setup_im2mesh.py build_ext --inplace
 cd ..
 ```
 
-Download the original six-frame model checkpoints:
+Download the original six-frame model checkpoints. They are used by `infer.py`
+and by the default inference for longer videos, as `ckpt/deform_vae.ckpt` and
+`ckpt/denoiser.ckpt`:
 ```bash
 mkdir ckpt
 gdown 1e9YGQAuFr5BDN2--srDEMnoULb4ZP5sx -O ./ckpt/ # deformation vae
@@ -69,17 +72,33 @@ python infer.py
 ```
 For other in-the-wild videos, you need to first segment foreground object out and save it as a sequence of RGBA images with white background.
 
-For **sixteen-frame inference**, run from the repository root with 16 segmented
-RGBA frames named `0.png` through `15.png`:
+For **16-frame and longer videos**, the default runs the six-frame model
+chunk-wise. It covers the video with six-frame windows that overlap by one
+frame (frames 0–5, 5–10, 10–15, …). Each window starts from the mesh that the
+previous window predicted for its last frame. Run from the repository root with
+segmented RGBA frames named `0.png`, `1.png`, …:
 
 ```bash
-python hy3dshape/infer_16.py --input-dir /path/to/rgba_frames --dry-run
+python hy3dshape/infer_long.py --input-dir /path/to/rgba_frames --num-frames 16 --dry-run
+python hy3dshape/infer_long.py --input-dir /path/to/rgba_frames --num-frames 16 \
+  --output-dir hy3dshape/output_folder/test/my_video
+```
+
+Use `--num-frames all` to reconstruct every frame of a longer video. See the
+[long-video guide](hy3dshape/INFERENCE_LONG.md) for custom frame names, resuming
+a run, outputs, and benchmark inputs.
+
+The **sixteen-frame model** remains available. It predicts all 16 frames in one
+pass with the R3 checkpoint; in our tests on 16-frame clips, the chunk-wise
+six-frame model gave lower geometry and motion errors:
+
+```bash
 python hy3dshape/infer_16.py --input-dir /path/to/rgba_frames \
   --output-dir hy3dshape/output_folder/test/my_video_16
 ```
 
-See the [sixteen-frame guide](hy3dshape/INFERENCE_16.md) for checkpoint overrides,
-custom frame names, resuming a run, benchmark inputs, and evaluation alignment.
+See the [sixteen-frame guide](hy3dshape/INFERENCE_16.md) for its checkpoints,
+options, and evaluation alignment.
 
 ## 😸 Evaluation
 See [the benchmark guide](benchmark/README.md) for the
@@ -103,8 +122,8 @@ python benchmark/evaluate.py \
 The evaluator reports PSNR, SSIM, LPIPS, and CLIP image similarity. It checks all
 required frames before scoring and supports the original Mesh4D render layout.
 The [sixteen-frame workflow](benchmark/README.md#sixteen-frame-inference-rendering-and-evaluation)
-connects the new inference command, batch rendering with benchmark cameras,
-and `--frames 16` evaluation over 48 clips.
+connects chunk-wise inference (or the sixteen-frame model), batch rendering
+with benchmark cameras, and `--frames 16` evaluation over 48 clips.
 Optional historical I3D scoring and alternate filename layouts are documented
 in the guide. Archive publication to Drive has not yet been verified; local
 archives can already be verified and extracted with the command above.

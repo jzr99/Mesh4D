@@ -1,5 +1,9 @@
 # Sixteen-frame checkpoints
 
+The default inference for 16-frame and longer videos runs the six-frame model
+chunk-wise and uses the six-frame checkpoints from the main [README](../README.md).
+The files below are for the single-pass sixteen-frame model.
+
 The 16-frame VAE and R3 denoiser are available as complete files in
 [zerenjiang/Mesh4D_16 on Hugging Face](https://huggingface.co/zerenjiang/Mesh4D_16).
 Use them together with [infer_16.yaml](../hy3dshape/configs/infer_16.yaml).

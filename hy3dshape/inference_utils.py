@@ -1,4 +1,4 @@
-"""Input preparation and strict checkpoint loading for 16-frame inference.
+"""Input preparation and strict checkpoint loading for six- and sixteen-frame inference.
 
 RGBA compositing, shared foreground crop, padding and normalization follow
 Hunyuan3D-2.1/hy3dshape/dataset/OBJVERSES.py and custom_dataloader.py.
@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
-FRAMES = 16
+FRAMES = 16  # default sequence length (infer_16.py)
 
 
 def relative_name(name):
@@ -31,40 +31,45 @@ class Sequence:
                 'source_frames': list(self.frame_numbers), 'clip_path': self.clip_path}
 
 
-def input_sequences(args):
+def input_sequences(args, frames=FRAMES):
     if args.benchmark_root is not None:
         from benchmark.evaluate import load_clips
         manifest = args.manifest or args.benchmark_root / 'manifest.json'
         root = args.input_root or args.benchmark_root / 'input_images'
         sequences = []
-        for clip in load_clips(manifest, FRAMES, args.clip):
+        for clip in load_clips(manifest, frames, args.clip):
             object_path = relative_name(clip['object_path'])
             relative_name(clip['clip_path'])
             start, stride = clip['start_frame'], clip['stride']
             if start < 0 or stride < 1:
                 raise ValueError(f'Invalid frame interval: {clip["clip_path"]}')
-            frames = tuple(start + t * stride for t in range(FRAMES))
-            paths = tuple((root / object_path / f'front_frame{t}.png').resolve() for t in frames)
-            sequences.append(Sequence(f'{object_path}_{start}_{stride}', paths, frames, clip['clip_path']))
+            numbers = tuple(start + t * stride for t in range(frames))
+            paths = tuple((root / object_path / f'front_frame{t}.png').resolve() for t in numbers)
+            sequences.append(Sequence(f'{object_path}_{start}_{stride}', paths, numbers, clip['clip_path']))
         return sequences
     if args.clip or args.input_root or args.manifest:
         raise ValueError('--clip, --input-root and --manifest require --benchmark-root.')
     if args.start_frame < 0 or args.stride < 1:
         raise ValueError('Use a nonnegative --start-frame and positive --stride.')
-    frames = tuple(args.start_frame + t * args.stride for t in range(FRAMES))
-    pattern = args.image_pattern
+    numbers = tuple(args.start_frame + t * args.stride for t in range(frames))
+    pattern = image_pattern(args.input_dir, numbers[0], args.image_pattern)
+    names = [relative_name(pattern.format(frame=t)) for t in numbers]
+    if len(set(names)) != frames:
+        raise ValueError(f'--image-pattern must produce {frames} distinct paths; include {{frame}}.')
+    paths = tuple((args.input_dir / name).resolve() for name in names)
+    name = f'{args.input_dir.resolve().name}_{args.start_frame}_{args.stride}'
+    return [Sequence(relative_name(name), paths, numbers)]
+
+
+def image_pattern(input_dir, first_frame, pattern=None):
+    """The given filename pattern, or the one default pattern whose first frame exists."""
     if pattern is None:
         candidates = ('{frame}.png', 'front_frame{frame}.png')
-        matches = [p for p in candidates if (args.input_dir / p.format(frame=frames[0])).is_file()]
+        matches = [p for p in candidates if (input_dir / p.format(frame=first_frame)).is_file()]
         if len(matches) != 1:
             raise ValueError('Cannot determine image names; provide --image-pattern, e.g. "{frame:04d}.png".')
         pattern = matches[0]
-    names = [relative_name(pattern.format(frame=t)) for t in frames]
-    if len(set(names)) != FRAMES:
-        raise ValueError('--image-pattern must produce 16 distinct paths; include {frame}.')
-    paths = tuple((args.input_dir / name).resolve() for name in names)
-    name = f'{args.input_dir.resolve().name}_{args.start_frame}_{args.stride}'
-    return [Sequence(relative_name(name), paths, frames)]
+    return pattern
 
 
 def validate_images(sequences):
@@ -124,15 +129,15 @@ def load_batch(sequence, image_size=518, padding_ratio=1.15):
             'mask': torch.stack(mask_tensors).unsqueeze(0), 'model_name': [sequence.name]}
 
 
-def load_config(path):
+def load_config(path, frames=FRAMES):
     import yaml
     config = yaml.safe_load(path.read_text())
     model = config['model']
     counts = [config['frames'], model['denoiser_cfg']['params']['num_frames'],
               model['first_stage_config']['params']['num_frames'],
               model['pipeline_cfg']['params']['latent_shape'][0]]
-    if counts != [FRAMES] * 4 or model['pipeline_cfg']['params']['latent_shape'][1:] != [256, 64]:
-        raise ValueError('The input, VAE, denoiser and latent sequence must all use 16 frames and 256x64 latents.')
+    if counts != [frames] * 4 or model['pipeline_cfg']['params']['latent_shape'][1:] != [256, 64]:
+        raise ValueError(f'The input, VAE, denoiser and latent sequence must all use {frames} frames and 256x64 latents.')
     if config['image_size'] != 518 or config['padding_ratio'] < 1:
         raise ValueError('Use image_size=518 and padding_ratio >= 1.')
     return config
