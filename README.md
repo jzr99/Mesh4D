@@ -12,7 +12,6 @@
 
 ## 🔥 News
 
-- Nov 15, 2026: Chunk-wise six-frame inference is now the default for 16-frame and longer videos.
 - Nov 7, 2026: Sixteen-frame checkpoints, inference, and benchmark rendering are available.
 - Jan 9, 2026: 🤗 We release the first version of Mesh4D!
 - Nov 5, 2026: 🤗 We release the MeshBench Bechmark and visualization code!
@@ -88,9 +87,7 @@ Use `--num-frames all` to reconstruct every frame of a longer video. See the
 [long-video guide](hy3dshape/INFERENCE_LONG.md) for custom frame names, resuming
 a run, outputs, and benchmark inputs.
 
-The **sixteen-frame model** remains available. It predicts all 16 frames in one
-pass with the R3 checkpoint; in our tests on 16-frame clips, the chunk-wise
-six-frame model gave lower geometry and motion errors:
+The **sixteen-frame model** remains available:
 
 ```bash
 python hy3dshape/infer_16.py --input-dir /path/to/rgba_frames \

@@ -6,9 +6,8 @@ windows that overlap by one frame: frames 0–5, 5–10, 10–15, and so on. The
 first window starts from the canonical mesh. Each later window starts from the
 pose that the previous window predicted for its last frame. A final window
 shorter than six frames repeats its last frame, and the poses predicted for the
-repeated frames are discarded. In our tests on 16-frame clips, chaining the
-six-frame model gave lower geometry and motion errors than the single-pass
-[sixteen-frame R3 model](INFERENCE_16.md), which remains available.
+repeated frames are discarded. The single-pass
+[sixteen-frame R3 model](INFERENCE_16.md) remains available.
 
 It uses the six-frame checkpoints from the setup in the [main README](../README.md),
 `ckpt/deform_vae.ckpt` and `ckpt/denoiser.ckpt`, with

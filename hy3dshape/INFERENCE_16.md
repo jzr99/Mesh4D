@@ -1,9 +1,8 @@
 # Sixteen-frame inference
 
 For 16-frame and longer videos, the default is now chunk-wise six-frame
-inference ([long-video guide](INFERENCE_LONG.md)); in our tests on 16-frame clips
-it gave lower geometry and motion errors. This guide covers the single-pass
-sixteen-frame model, which remains available.
+inference ([long-video guide](INFERENCE_LONG.md)). This guide covers the
+single-pass sixteen-frame model, which remains available.
 
 Use the existing Mesh4D CUDA environment and Blender 4.0's `bpy` Python module.
 Use the 16-frame R3 denoiser (`diffuse_r3_ckpt-step=00003000.ckpt`) with
